@@ -1,0 +1,57 @@
+####
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+### Afficher tous les programmeurs
+GET http://localhost:8080/tpfilrouge/programmeurs
+Accept: application/json
+
+###
+### Afficher un programmeur par son id
+GET http://localhost:8080/tpfilrouge/programmeur/2
+
+###
+### Suprrimer un programmeur par son id
+DELETE http://localhost:8080/tpfilrouge/programmeur/supprimer/id
+
+###
+### Modifier un programmeur par son id
+PUT http://localhost:8080/tpfilrouge/programmeur/modifierPut/2
+Content-Type: application/json
+
+{
+  "nom": "Doe",
+  "prenom": "John",
+  "adresse": "10 rue Rivoli, Paris",
+  "langage": "Java",
+  "livre": "Clean Code",
+  "salaire": 50000
+}
+
+###
+### Modifier partiellement avec Patch
+PATCH http://localhost:8080/tpfilrouge/programmeur/modifierPatch/1
+Content-Type: application/json
+
+{
+  "adresse": "40 avenue des Lilas, Lyon"
+}
+
+###
+### Ajouter un nouveau programmeur
+POST http://localhost:8080/tpfilrouge/programmeurs
+Content-Type: application/json
+
+{
+"nom": "Camara",
+"prenom": "Oumou",
+"adresse": "3 rue des rêves, Paris",
+"langage": "Java",
+"livre": "Java pas à pas",
+"salaire": 38000.0
+}
+
+###
+###
