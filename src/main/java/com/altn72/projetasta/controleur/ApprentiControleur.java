@@ -2,6 +2,7 @@ package com.altn72.projetasta.controleur;
 
 import com.altn72.projetasta.modele.Apprenti;
 import com.altn72.projetasta.controleur.service.ApprentiService;
+import com.altn72.projetasta.modele.Entreprise;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,12 @@ public class ApprentiControleur {
         List<Apprenti> apprentis = apprentiService.getTousLesApprentis();
         model.addAttribute("lesApprentis", apprentis);
         return "listeApprentis";  // pour la vue thymeleaf
+    }
+    // GET pour les tests API (retourne du JSON)
+    @GetMapping("/api")
+    @ResponseBody
+    public List<Apprenti> getTousLesApprentisAPI() {
+        return apprentiService.getTousLesApprentis();
     }
 
     @GetMapping("/{id}")

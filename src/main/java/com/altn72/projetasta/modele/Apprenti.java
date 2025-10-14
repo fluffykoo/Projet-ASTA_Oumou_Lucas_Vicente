@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "apprenti")
 public class Apprenti {
 
+    //informations de base
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -23,6 +24,22 @@ public class Apprenti {
     @Column(name = "telephone", length = 20)
     private String telephone;
 
+    @Column(length = 50)
+    private String programme;
+
+    @Column(length = 50)
+    private String anneeAcademique;
+
+    @Column(length = 100)
+    private String majeure;
+
+    //relation avec d'autres tab
+
+    @ManyToOne
+    @JoinColumn(name = "entreprise_id")
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("apprentis")
+    private Entreprise entreprise;
+    // Getters & Setters
     public Integer getId() {
         return id;
     }
@@ -61,5 +78,32 @@ public class Apprenti {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+    public String getProgramme() {
+        return programme;
+    }
+    public void setProgramme(String programme) {
+        this.programme = programme;
+    }
+
+    public String getAnneeAcademique() {
+        return anneeAcademique;
+    }
+    public void setAnneeAcademique(String anneeAcademique) {
+        this.anneeAcademique = anneeAcademique;
+    }
+
+    public String getMajeure() {
+        return majeure;
+    }
+    public void setMajeure(String majeure) {
+        this.majeure = majeure;
+    }
+    public Entreprise getEntreprise() {
+        return entreprise;
+    }
+
+    public void setEntreprise(Entreprise entreprise) {
+        this.entreprise = entreprise;
     }
 }

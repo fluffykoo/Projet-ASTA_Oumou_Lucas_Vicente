@@ -1,0 +1,41 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+### Ajouter un apprenti
+POST http://localhost:8080/apprentis
+Content-Type: application/json
+
+{
+  "nom": "NomApprenti1",
+  "prenom": "PrenomApprenti1",
+  "email": "apprenti1@example.com",
+  "telephone": "0611111111"
+}
+
+###  Récupérer tous les apprentis
+GET http://localhost:8080/apprentis/api
+
+###Récupérer un apprenti par ID
+GET http://localhost:8080/apprentis/1
+
+### Modifier un apprenti
+PUT http://localhost:8080/apprentis/1
+Content-Type: application/json
+
+{
+  "nom": "NomApprenti1",
+  "prenom": "PrenomApprenti1",
+  "email": "apprenti1@example.com",
+  "telephone": "0611111112",
+  "programme": "M2-PRO",
+  "anneeAcademique": "2023-2024",
+  "majeure": "Digital Transformation",
+  "entreprise": {
+    "id": 1
+  }
+}
+
+### Supprimer un apprenti
+DELETE http://localhost:8080/apprentis/1

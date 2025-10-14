@@ -1,0 +1,37 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+### Ajouter une entreprise
+POST http://localhost:8080/entreprises
+Content-Type: application/json
+
+{
+  "nom": "Société Générale",
+  "adresse": "19 Cr Valmy",
+  "ville": "Puteaux",
+  "telephone": "0102030405",
+  "email": "contact@sg.com"
+}
+###
+### Récupérer toutes les entreprises
+GET http://localhost:8080/entreprises/api
+###
+### Récupérer une entreprise par ID
+GET http://localhost:8080/entreprises/1
+###
+###  Supprimer une entreprise
+DELETE http://localhost:8080/entreprises/1
+###
+###  Modifier une entreprise (PUT)
+PUT http://localhost:8080/entreprises/1
+Content-Type: application/json
+
+{
+  "nom": " Entreprise XXX",
+  "adresse": "456 avenue de Paris",
+  "ville": "Paris",
+  "telephone": "0601020304",
+  "email": "entreprise@exemple.com"
+}

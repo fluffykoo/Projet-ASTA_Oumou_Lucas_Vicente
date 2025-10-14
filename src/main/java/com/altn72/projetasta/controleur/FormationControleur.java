@@ -1,4 +1,5 @@
 package com.altn72.projetasta.controleur;
+import com.altn72.projetasta.modele.Entreprise;
 import com.altn72.projetasta.modele.Formation;
 import com.altn72.projetasta.controleur.service.FormationService;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,12 @@ public class FormationControleur {
         return "listeFormations";
     }
 
+    // GET pour les tests API (retourne du JSON)
+    @GetMapping("/api")
+    @ResponseBody
+    public List<Formation> getToutesLesFormations() {
+        return formationService.getToutesLesFormations();
+    }
 
     @GetMapping("/{id}")
     @ResponseBody
