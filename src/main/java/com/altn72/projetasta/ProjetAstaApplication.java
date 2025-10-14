@@ -1,13 +1,10 @@
-package com.altn72.tpfilrouge;
+package com.altn72.projetasta;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
-import java.util.List;
-
 @SpringBootApplication
-public class TpFilRougeApplication {
+public class ProjetAstaApplication {
 
     public static void main(String[] args) {
 
@@ -16,7 +13,7 @@ public class TpFilRougeApplication {
 //        for (String msg : messages) {
 //            System.out.println(msg);
 //        }
-        SpringApplication.run(TpFilRougeApplication.class, args);
+        SpringApplication.run(ProjetAstaApplication.class, args);
     }
 
 }

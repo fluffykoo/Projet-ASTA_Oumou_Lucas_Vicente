@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.altn72</groupId>
-    <artifactId>TpFilRouge</artifactId>
+    <artifactId>ProjetASTA</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>TpFilRouge</name>
     <description>TpFilRouge</description>
