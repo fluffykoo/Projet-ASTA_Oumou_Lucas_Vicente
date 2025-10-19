@@ -1,7 +1,6 @@
 package com.altn72.projetasta.modele;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,56 +11,55 @@ public class Entreprise {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, length = 150)
-    private String nom;
+    @Column(name = "raison_sociale", nullable = false, length = 150)
+    private String raisonSociale;
 
-    @Column(length = 255)
+    @Column(name = "adresse", length = 255)
     private String adresse;
 
-    @Column(length = 100)
-    private String ville;
+    @Column(name = "infos_utiles_acces", length = 255)
+    private String infosUtilesAcces;
 
-    @Column(length = 50)
-    private String telephone;
-
-    @Column(length = 100)
-    private String email;
-
-    @OneToMany(mappedBy = "entreprise")
-    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("entreprise")
+    @OneToMany(mappedBy = "entreprise", cascade = CascadeType.ALL)
     private List<Apprenti> apprentis;
-    // Constructeurs
-    public Entreprise() {}
 
-    public Entreprise(String nom, String adresse, String ville, String telephone, String email) {
-        this.nom = nom;
-        this.adresse = adresse;
-        this.ville = ville;
-        this.telephone = telephone;
-        this.email = email;
+    public Integer getId() {
+        return id;
     }
 
-    // Getters / Setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
+    public String getRaisonSociale() {
+        return raisonSociale;
+    }
 
-    public String getAdresse() { return adresse; }
-    public void setAdresse(String adresse) { this.adresse = adresse; }
+    public void setRaisonSociale(String raisonSociale) {
+        this.raisonSociale = raisonSociale;
+    }
 
-    public String getVille() { return ville; }
-    public void setVille(String ville) { this.ville = ville; }
+    public String getAdresse() {
+        return adresse;
+    }
 
-    public String getTelephone() { return telephone; }
-    public void setTelephone(String telephone) { this.telephone = telephone; }
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getInfosUtilesAcces() {
+        return infosUtilesAcces;
+    }
 
-    public List<Apprenti> getApprentis() { return apprentis; }
-    public void setApprentis(List<Apprenti> apprentis) { this.apprentis = apprentis; }
+    public void setInfosUtilesAcces(String infosUtilesAcces) {
+        this.infosUtilesAcces = infosUtilesAcces;
+    }
 
+    public List<Apprenti> getApprentis() {
+        return apprentis;
+    }
 
+    public void setApprentis(List<Apprenti> apprentis) {
+        this.apprentis = apprentis;
+    }
 }

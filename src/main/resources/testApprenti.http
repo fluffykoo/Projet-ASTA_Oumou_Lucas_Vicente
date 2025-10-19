@@ -1,34 +1,20 @@
-### GET request to example server
-GET https://examples.http-client.intellij.net/get
-    ?generated-in=IntelliJ IDEA
+###
+### Récupérer tous les apprentis
+GET http://localhost:8080/api/apprentis
 
 ###
+### Récupérer un apprenti par ID
+GET http://localhost:8080/api/apprentis/1
+
 ### Ajouter un apprenti
-POST http://localhost:8080/apprentis
+POST http://localhost:8080/api/apprentis
 Content-Type: application/json
 
 {
   "nom": "NomApprenti1",
   "prenom": "PrenomApprenti1",
   "email": "apprenti1@example.com",
-  "telephone": "0611111111"
-}
-
-###  Récupérer tous les apprentis
-GET http://localhost:8080/apprentis/api
-
-###Récupérer un apprenti par ID
-GET http://localhost:8080/apprentis/1
-
-### Modifier un apprenti
-PUT http://localhost:8080/apprentis/1
-Content-Type: application/json
-
-{
-  "nom": "NomApprenti1",
-  "prenom": "PrenomApprenti1",
-  "email": "apprenti1@example.com",
-  "telephone": "0611111112",
+  "telephone": "0611111111",
   "programme": "M2-PRO",
   "anneeAcademique": "2023-2024",
   "majeure": "Digital Transformation",
@@ -37,5 +23,25 @@ Content-Type: application/json
   }
 }
 
+
+###
+### Modifier un apprenti (PUT)
+PUT http://localhost:8080/api/apprentis/1
+Content-Type: application/json
+
+{
+  "nom": "NomApprentiModifié",
+  "prenom": "PrenomApprentiModifié",
+  "email": "apprenti1.modif@example.com",
+  "telephone": "0611111112",
+  "programme": "M2-PRO",
+  "anneeAcademique": "2023-2024",
+  "majeure": "Ingénierie Logicielle",
+  "entreprise": {
+    "id": 1
+  }
+}
+
+###
 ### Supprimer un apprenti
-DELETE http://localhost:8080/apprentis/1
+DELETE http://localhost:8080/api/apprentis/1

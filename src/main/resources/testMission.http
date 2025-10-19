@@ -1,0 +1,43 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+### Ajouter une mission
+POST http://localhost:8080/api/missions
+Content-Type: application/json
+
+{
+  "motsCles": "DevOps, CI/CD, Tests",
+  "metierCible": "Développeur Full Stack",
+  "commentaires": "Mise en place d'une pipeline CI/CD",
+  "apprenti": {
+    "id": 1
+  }
+}
+
+###
+### Récupérer toutes les missions
+GET http://localhost:8080/api/missions
+
+###
+### Récupérer une mission par ID
+GET http://localhost:8080/api/missions/1
+
+###
+### Modifier une mission
+PUT http://localhost:8080/api/missions/1
+Content-Type: application/json
+
+{
+  "motsCles": "Node.js, CI/CD, Tests automatisés",
+  "metierCible": "Ingénieur DevOps",
+  "commentaires": "Mise à jour de la mission",
+  "apprenti": {
+    "id": 1
+  }
+}
+
+###
+### Supprimer une mission
+DELETE http://localhost:8080/api/missions/1

@@ -1,0 +1,37 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+### Ajouter un tuteur enseignant
+POST http://localhost:8080/api/tuteurs
+Content-Type: application/json
+
+{
+  "nom": "Martin",
+  "prenom": "Sophie",
+  "email": "sophie.martin@efrei.fr",
+  "telephone": "0606060606",
+  "remarques": "Responsable pédagogique du M2"
+}
+
+### Récupérer tous les tuteurs
+GET http://localhost:8080/api/tuteurs
+
+### Récupérer un tuteur par ID
+GET http://localhost:8080/api/tuteurs/1
+
+### Modifier un tuteur enseignant
+PUT http://localhost:8080/api/tuteurs/1
+Content-Type: application/json
+
+{
+  "nom": "Martin",
+  "prenom": "Sophie",
+  "email": "sophie.martin@univ.fr",
+  "telephone": "0707070707",
+  "remarques": "Changement de numéro"
+}
+
+### Supprimer un tuteur
+DELETE http://localhost:8080/api/tuteurs/1

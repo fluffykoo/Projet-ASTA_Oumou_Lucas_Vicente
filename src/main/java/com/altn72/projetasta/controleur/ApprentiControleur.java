@@ -2,7 +2,6 @@ package com.altn72.projetasta.controleur;
 
 import com.altn72.projetasta.modele.Apprenti;
 import com.altn72.projetasta.controleur.service.ApprentiService;
-import com.altn72.projetasta.modele.Entreprise;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,42 +23,37 @@ public class ApprentiControleur {
     public String afficherTousLesApprentis(Model model) {
         List<Apprenti> apprentis = apprentiService.getTousLesApprentis();
         model.addAttribute("lesApprentis", apprentis);
-        return "listeApprentis";  // pour la vue thymeleaf
-    }
-    // GET pour les tests API (retourne du JSON)
-    @GetMapping("/api")
-    @ResponseBody
-    public List<Apprenti> getTousLesApprentisAPI() {
-        return apprentiService.getTousLesApprentis();
+        return "listeApprentis";
     }
 
-    @GetMapping("/{id}")
-    @ResponseBody
-    public Optional<Apprenti> afficherUnApprenti(@PathVariable Integer id) {
-        return apprentiService.getUnApprenti(id);
+    @GetMapping("/preparerAjout")
+    public String preparerAjout(Model model) {
+        model.addAttribute("nouvelApprenti", new Apprenti());
+        return "nouvelApprenti";
     }
 
-    @PostMapping
-    @ResponseBody
-    public Apprenti ajouterUnApprenti(@RequestBody Apprenti apprenti) {
-        return apprentiService.ajouterUnApprenti(apprenti);
+    @PostMapping("/ajouter")
+    public String ajouterApprenti(@ModelAttribute Apprenti apprenti) {
+        apprentiService.ajouterUnApprenti(apprenti);
+        return "redirect:/apprentis";
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseBody
-    public Optional<Apprenti> supprimerUnApprenti(@PathVariable Integer id) {
-        return apprentiService.supprimerUnApprenti(id);
+    @GetMapping("/preparerModif/{id}")
+    public String preparerModif(@PathVariable Integer id, Model model) {
+        Optional<Apprenti> apprenti = apprentiService.getUnApprenti(id);
+        model.addAttribute("apprentiToUpdate", apprenti.orElseThrow());
+        return "detailsApprenti";
     }
 
-    @PutMapping("/{id}")
-    @ResponseBody
-    public void modifierUnApprenti(@PathVariable Integer id, @RequestBody Apprenti apprenti) {
-        apprentiService.modifierUnApprenti(id, apprenti);
+    @PutMapping("/modifier/{id}")
+    public String modifierApprenti(@PathVariable Integer id, @ModelAttribute Apprenti apprentiModifie) {
+        apprentiService.modifierUnApprenti(id, apprentiModifie);
+        return "redirect:/apprentis";
     }
 
-    @PatchMapping("/{id}")
-    @ResponseBody
-    public Optional<Apprenti> patchUnApprenti(@PathVariable Integer id, @RequestBody Apprenti apprenti) {
-        return apprentiService.patchUnApprenti(id, apprenti);
+    @DeleteMapping("/supprimer/{id}")
+    public String supprimerApprenti(@PathVariable Integer id) {
+        apprentiService.supprimerUnApprenti(id);
+        return "redirect:/apprentis";
     }
 }

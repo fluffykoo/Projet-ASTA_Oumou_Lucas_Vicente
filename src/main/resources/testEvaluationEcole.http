@@ -1,0 +1,49 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+###
+### Ajouter une évaluation école
+POST http://localhost:8080/api/evaluations
+Content-Type: application/json
+
+{
+  "memoireTheme": "Optimisation des pipelines CI/CD",
+  "memoireNoteFinale": 16.5,
+  "memoireCommentaires": "Excellent travail sur le rapport",
+  "soutenanceDate": "2025-10-20",
+  "soutenanceNoteFinale": 15.0,
+  "soutenanceCommentaires": "Bonne présentation orale",
+  "apprenti": {
+    "id": 1
+  }
+}
+
+###
+### Récupérer toutes les évaluations
+GET http://localhost:8080/api/evaluations
+
+###
+### Récupérer une évaluation par ID
+GET http://localhost:8080/api/evaluations/1
+
+###
+### Modifier une évaluation
+PUT http://localhost:8080/api/evaluations/1
+Content-Type: application/json
+
+{
+  "memoireTheme": "Optimisation CI/CD - Version 2",
+  "memoireNoteFinale": 17.5,
+  "memoireCommentaires": "Très bon travail",
+  "soutenanceDate": "2025-10-21",
+  "soutenanceNoteFinale": 16.0,
+  "soutenanceCommentaires": "Bonne amélioration",
+  "apprenti": {
+    "id": 1
+  }
+}
+
+###
+### Supprimer une évaluation
+DELETE http://localhost:8080/api/evaluations/1

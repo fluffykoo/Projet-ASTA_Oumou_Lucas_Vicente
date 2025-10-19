@@ -19,45 +19,41 @@ public class EntrepriseControleur {
         this.entrepriseService = entrepriseService;
     }
 
-    // GET : afficher la liste des entreprises
     @GetMapping
-    public String afficherToutesLesEntreprises(Model model) {
+    public String afficherEntreprises(Model model) {
         List<Entreprise> entreprises = entrepriseService.getToutesLesEntreprises();
-        model.addAttribute("lesEntreprises", entreprises);
-        return "listeEntreprises"; // pour le template Thymeleaf
-    }
-    // GET pour les tests API (retourne du JSON)
-    @GetMapping("/api")
-    @ResponseBody
-    public List<Entreprise> getToutesLesEntreprisesAPI() {
-        return entrepriseService.getToutesLesEntreprises();
+        model.addAttribute("entreprises", entreprises);
+        return "listeEntreprises";
     }
 
-    // GET : récupérer une entreprise par son id
-    @GetMapping("/{id}")
-    @ResponseBody
-    public Optional<Entreprise> afficherUneEntreprise(@PathVariable Integer id) {
-        return entrepriseService.getUneEntreprise(id);
+    @DeleteMapping("/supprimer/{id}")
+    public String supprimerEntreprise(@PathVariable Integer id) {
+        entrepriseService.supprimerUneEntreprise(id);
+        return "redirect:/entreprises";
     }
 
-    // POST : ajouter une entreprise
-    @PostMapping
-    @ResponseBody
-    public Entreprise ajouterUneEntreprise(@RequestBody Entreprise entreprise) {
-        return entrepriseService.ajouterUneEntreprise(entreprise);
+    @GetMapping("/preparerAjout")
+    public String preparerAjout(Model model) {
+        model.addAttribute("nouvelleEntreprise", new Entreprise());
+        return "nouvelleEntreprise";
     }
 
-    //DELETE : supprimer une entreprise
-    @DeleteMapping("/{id}")
-    @ResponseBody
-    public Optional<Entreprise> supprimerUneEntreprise(@PathVariable Integer id) {
-        return entrepriseService.supprimerUneEntreprise(id);
+    @PostMapping("/ajouter")
+    public String ajouterEntreprise(@ModelAttribute Entreprise entreprise) {
+        entrepriseService.ajouterUneEntreprise(entreprise);
+        return "redirect:/entreprises";
     }
 
-    //PUT : modifier une entreprise en sa totalité
-    @PutMapping("/{id}")
-    @ResponseBody
-    public void modifierUneEntreprise(@PathVariable Integer id, @RequestBody Entreprise entreprise) {
-        entrepriseService.modifierUneEntreprise(id, entreprise);
+    @GetMapping("/preparerModif/{id}")
+    public String preparerModif(@PathVariable Integer id, Model model) {
+        Optional<Entreprise> entreprise = entrepriseService.getUneEntreprise(id);
+        model.addAttribute("entrepriseToUpdate", entreprise.orElseThrow());
+        return "detailsEntreprise";
+    }
+
+    @PutMapping("/modifier/{id}")
+    public String modifierEntreprise(@PathVariable Integer id, @ModelAttribute Entreprise entrepriseModifiee) {
+        entrepriseService.modifierUneEntreprise(id, entrepriseModifiee);
+        return "redirect:/entreprises";
     }
 }

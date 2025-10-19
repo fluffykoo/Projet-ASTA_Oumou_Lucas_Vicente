@@ -1,15 +1,17 @@
+/**
+ * Classe Entity qui est "bindée" avec la table "maitre_apprentissage"
+ * chaque ligne de la table maitre_apprentissage correspond à une instance de cette classe Entity
+ *
+ */
+
 package com.altn72.projetasta.modele;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
-@Table(name = "apprenti")
-public class Apprenti {
+@Table(name = "maitre_apprentissage")
+public class MaitreApprentissage {
 
-    //informations de base
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -21,31 +23,21 @@ public class Apprenti {
     @Column(name = "prenom", nullable = false, length = 100)
     private String prenom;
 
+    @Column(name = "poste", length = 100)
+    private String poste;
+
     @Column(name = "email", length = 150)
     private String email;
 
-    @Column(name = "telephone", length = 20)
+    @Column(name = "telephone", length = 50)
     private String telephone;
 
-    @Column(length = 50)
-    private String programme;
-
-    @Column(length = 50)
-    private String anneeAcademique;
-
-    @Column(length = 100)
-    private String majeure;
-
-    //relations avec d'autres tab
+    @Column(name = "remarques", length = 255)
+    private String remarques;
 
     @ManyToOne
     @JoinColumn(name = "entreprise_id")
-    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("apprentis")
     private Entreprise entreprise;
-
-    @OneToOne(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
-    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("apprenti")
-    private Mission mission;
 
     // Getters & Setters
     public Integer getId() {
@@ -72,6 +64,14 @@ public class Apprenti {
         this.prenom = prenom;
     }
 
+    public String getPoste() {
+        return poste;
+    }
+
+    public void setPoste(String poste) {
+        this.poste = poste;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -87,38 +87,20 @@ public class Apprenti {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
-    public String getProgramme() {
-        return programme;
-    }
-    public void setProgramme(String programme) {
-        this.programme = programme;
+
+    public String getRemarques() {
+        return remarques;
     }
 
-    public String getAnneeAcademique() {
-        return anneeAcademique;
-    }
-    public void setAnneeAcademique(String anneeAcademique) {
-        this.anneeAcademique = anneeAcademique;
+    public void setRemarques(String remarques) {
+        this.remarques = remarques;
     }
 
-    public String getMajeure() {
-        return majeure;
-    }
-    public void setMajeure(String majeure) {
-        this.majeure = majeure;
-    }
     public Entreprise getEntreprise() {
         return entreprise;
     }
 
     public void setEntreprise(Entreprise entreprise) {
         this.entreprise = entreprise;
-    }
-    public Mission getMission() {
-        return mission;
-    }
-
-    public void setMission(Mission mission) {
-        this.mission = mission;
     }
 }

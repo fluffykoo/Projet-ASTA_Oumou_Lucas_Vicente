@@ -43,6 +43,7 @@ public class EntrepriseService {
     public void modifierUneEntreprise(Integer id, Entreprise entrepriseModifiee) {
         Entreprise entrepriseToModify = entrepriseRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Cette entreprise n'existe pas"));
+
         BeanUtils.copyProperties(entrepriseModifiee, entrepriseToModify, "id");
         entrepriseRepository.save(entrepriseToModify);
     }
