@@ -2,6 +2,7 @@ package com.altn72.projetasta.controleur.service;
 
 import com.altn72.projetasta.modele.TuteurEnseignant;
 import com.altn72.projetasta.modele.repository.TuteurEnseignantRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,9 +12,12 @@ import java.util.Optional;
 public class TuteurEnseignantService {
 
     private final TuteurEnseignantRepository tuteurEnseignantRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public TuteurEnseignantService(TuteurEnseignantRepository tuteurEnseignantRepository) {
+    public TuteurEnseignantService(TuteurEnseignantRepository tuteurEnseignantRepository,
+                                   PasswordEncoder passwordEncoder) {
         this.tuteurEnseignantRepository = tuteurEnseignantRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<TuteurEnseignant> getTousLesTuteurs() {
@@ -25,11 +29,19 @@ public class TuteurEnseignantService {
     }
 
     public TuteurEnseignant ajouterUnTuteur(TuteurEnseignant tuteur) {
+        // encodage du mot de passe avant sauvegarde
+        String hashedPassword = passwordEncoder.encode(tuteur.getPassword());
+        tuteur.setPassword(hashedPassword);
+        tuteur.setEnabled(true);  // sécurité : compte actif par défaut
         return tuteurEnseignantRepository.save(tuteur);
     }
 
     public void modifierUnTuteur(Integer id, TuteurEnseignant tuteur) {
         tuteur.setId(id);
+        // si le mot de passe a changé, le réencoder
+        if (tuteur.getPassword() != null && !tuteur.getPassword().isEmpty()) {
+            tuteur.setPassword(passwordEncoder.encode(tuteur.getPassword()));
+        }
         tuteurEnseignantRepository.save(tuteur);
     }
 

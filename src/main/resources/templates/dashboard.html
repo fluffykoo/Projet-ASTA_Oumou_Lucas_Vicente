@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - ASTA</title>
+</head>
+<body>
+<h1>Bienvenue dans ASTA</h1>
+
+<p>
+    Bonjour
+<!--    <span th:text="${#authentication.principal.prenom}"></span>-->
+<!--    <span th:text="${#authentication.principal.nom}"></span> 👋-->
+</p>
+
+<a th:href="@{/logout}">Se déconnecter</a>
+</body>
+</html>
+

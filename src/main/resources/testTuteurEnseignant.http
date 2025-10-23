@@ -10,7 +10,8 @@ Content-Type: application/json
 {
   "nom": "Martin",
   "prenom": "Sophie",
-  "email": "sophie.martin@efrei.fr",
+  "email": "sophie.martin2@efrei.fr",
+  "password": "12345",
   "telephone": "0606060606",
   "remarques": "Responsable pédagogique du M2"
 }
