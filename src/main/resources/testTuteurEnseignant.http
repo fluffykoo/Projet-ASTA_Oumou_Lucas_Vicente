@@ -15,7 +15,31 @@ Content-Type: application/json
   "telephone": "0606060606",
   "remarques": "Responsable pédagogique du M2"
 }
+### Création des tuteurs enseignants avec hash automatique
+POST http://localhost:8080/api/tuteurs
+Content-Type: application/json
 
+{
+  "prenom": "Oumou",
+  "nom": "Camara",
+  "email": "oumou.camara@asta.com",
+  "password": "oumou123",
+  "telephone": "0606060606",
+  "remarques": "Responsable pédagogique du M2"
+}
+###
+POST http://localhost:8080/api/tuteurs
+Content-Type: application/json
+
+
+{
+  "prenom": "Lucas",
+  "nom": "Baury",
+  "email": "lucas.baury@asta.com",
+  "password": "lucas123",
+  "telephone": "0616370183",
+  "remarques": "tuteur"
+}
 ### Récupérer tous les tuteurs
 GET http://localhost:8080/api/tuteurs
 
