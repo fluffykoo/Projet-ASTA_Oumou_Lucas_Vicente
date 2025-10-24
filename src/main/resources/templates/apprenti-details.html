@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Détails - ' + ${apprenti.prenom} + ' ' + ${apprenti.nom}">Détails Apprenti</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .card-header h5 { margin: 0; }
+        .btn-edit { display: block; }
+        .btn-actions { display: none; }
+    </style>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/dashboard}">
+            <i class="fas fa-graduation-cap me-2"></i>ASTA
+        </a>
+        <div class="navbar-nav ms-auto">
+                <span class="navbar-text text-white me-3" th:if="${#authentication}">
+                    Bonjour <span th:text="${#authentication.principal.prenom}">Tuteur</span> |
+                    <a href="#" class="text-white text-decoration-none" onclick="document.getElementById('logoutForm').submit();">
+                        Déconnectez-vous
+                    </a>
+                </span>
+        </div>
+    </div>
+</nav>
+
+<form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;"></form>
+
+<div class="container mt-4">
+    <!-- Messages -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- En-tête -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a th:href="@{/dashboard}" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-arrow-left me-1"></i>Retour
+            </a>
+            <h1 class="d-inline-block ms-2">
+                <i class="fas fa-user-graduate me-2"></i>
+                <span th:text="${apprenti.prenom + ' ' + apprenti.nom}"></span>
+            </h1>
+        </div>
+        <button type="button" class="btn btn-warning btn-edit" onclick="enableEditing()">
+            <i class="fas fa-edit me-1"></i>Modifier
+        </button>
+    </div>
+
+    <!-- Formulaire -->
+    <form th:action="@{/apprentis/modifier/{id}(id=${apprenti.id})}" th:object="${apprenti}" method="post">
+        <div class="row">
+            <!-- Informations Apprenti -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-user me-2"></i>Informations Apprenti</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Programme</label>
+                                <input type="text" class="form-control" th:field="*{programme}" readonly>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Année académique</label>
+                                <input type="text" class="form-control" th:field="*{anneeAcademique}" readonly>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Majeure</label>
+                                <input type="text" class="form-control" th:field="*{majeure}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Nom</label>
+                                <input type="text" class="form-control" th:field="*{nom}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Prénom</label>
+                                <input type="text" class="form-control" th:field="*{prenom}" readonly>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" th:field="*{email}" readonly>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Téléphone</label>
+                                <input type="tel" class="form-control" th:field="*{telephone}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Autres sections (Entreprise, Maître, Mission) -->
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-building me-2"></i>Entreprise</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:object="${apprenti.entreprise}" class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Raison sociale</label>
+                                <input type="text" class="form-control" th:field="*{raisonSociale}" readonly>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Adresse</label>
+                                <textarea class="form-control" th:field="*{adresse}" rows="2" readonly></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div id="actionButtons" class="btn-actions mb-4">
+            <button type="submit" class="btn btn-success me-2">
+                <i class="fas fa-check me-1"></i>Enregistrer
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="cancelEditing()">
+                <i class="fas fa-times me-1"></i>Annuler
+            </button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function enableEditing() {
+        const inputs = document.querySelectorAll('input, textarea');
+        inputs.forEach(input => input.readOnly = false);
+        document.querySelector('.btn-edit').style.display = 'none';
+        document.getElementById('actionButtons').style.display = 'block';
+    }
+
+    function cancelEditing() {
+        location.reload();
+    }
+
+    // Auto-dismiss alerts
+    setTimeout(() => {
+        document.querySelectorAll('.alert').forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+</script>
+</body>
+</html>
