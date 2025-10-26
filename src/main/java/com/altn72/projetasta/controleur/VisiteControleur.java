@@ -1,7 +1,7 @@
 package com.altn72.projetasta.controleur;
 
 import com.altn72.projetasta.modele.Visite;
-import com.altn72.projetasta.controleur.service.VisiteService;
+import com.altn72.projetasta.service.VisiteService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,46 +19,55 @@ public class VisiteControleur {
         this.visiteService = visiteService;
     }
 
+    // Afficher toutes les visites
     @GetMapping
     public String afficherToutesLesVisites(Model model) {
-        List<Visite> visites = visiteService.getToutesLesVisites();
+        List<Visite> visites = visiteService.getVisites();
         model.addAttribute("visites", visites);
-        return "listeVisites"; // nom du template Thymeleaf
+        return "listeVisites";
     }
 
-    @GetMapping("/unVisite/{idVisite}")
-    public Optional<Visite> afficherUneVisite(@PathVariable("idVisite") Integer id) {
-        return visiteService.getUneVisite(id);
+    // Afficher le détail d’une visite
+    @GetMapping("/{id}")
+    public String afficherUneVisite(@PathVariable("id") Integer id, Model model) {
+        Optional<Visite> visite = visiteService.getUneVisite(id);
+        model.addAttribute("visite", visite.orElseThrow());
+        return "detailsVisite";
     }
 
-    @DeleteMapping("/supprimer/{idVisite}")
-    public String supprimerVisite(@PathVariable("idVisite") Integer id) {
-        visiteService.supprimerUneVisite(id);
+    // Supprimer une visite
+    @DeleteMapping("/supprimer/{id}")
+    public String supprimerVisite(@PathVariable("id") Integer id) {
+        visiteService.supprimerVisite(id);
         return "redirect:/visites";
     }
 
-    @PostMapping("/ajouter")
-    public String ajouterVisite(@ModelAttribute Visite visite) {
-        visiteService.ajouterUneVisite(visite);
-        return "redirect:/visites";
-    }
-
+    // Préparer le formulaire d’ajout
     @GetMapping("/preparerAjout")
     public String preparerAjoutVisite(Model model) {
         model.addAttribute("nouvelleVisite", new Visite());
         return "nouvelleVisite";
     }
 
-    @GetMapping("/preparerModif/{idVisite}")
-    public String preparerModifVisite(@PathVariable Integer idVisite, Model model) {
-        Optional<Visite> visiteToUpdate = visiteService.getUneVisite(idVisite);
+    // Ajouter une visite
+    @PostMapping("/ajouter")
+    public String ajouterVisite(@ModelAttribute Visite visite) {
+        visiteService.ajouterVisite(visite);
+        return "redirect:/visites";
+    }
+
+    // Préparer le formulaire de modification
+    @GetMapping("/preparerModif/{id}")
+    public String preparerModifVisite(@PathVariable("id") Integer id, Model model) {
+        Optional<Visite> visiteToUpdate = visiteService.getUneVisite(id);
         model.addAttribute("visiteToUpdate", visiteToUpdate.orElseThrow());
         return "detailsVisite";
     }
 
-    @PutMapping("/modifier/{idVisite}")
-    public String modifierVisite(@PathVariable Integer idVisite, @ModelAttribute Visite visiteModifiee) {
-        visiteService.modifierUneVisite(idVisite, visiteModifiee);
+    // Modifier une visite
+    @PutMapping("/modifier/{id}")
+    public String modifierVisite(@PathVariable("id") Integer id, @ModelAttribute Visite visiteModifiee) {
+        visiteService.modifierVisite(id, visiteModifiee);
         return "redirect:/visites";
     }
 }

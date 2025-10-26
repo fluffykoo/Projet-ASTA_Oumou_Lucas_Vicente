@@ -1,7 +1,7 @@
 package com.altn72.projetasta.controleur;
 
-import com.altn72.projetasta.modele.EvaluationEcole;
-import com.altn72.projetasta.service.EvaluationEcoleService;
+import com.altn72.projetasta.modele.EvaluationRapport;
+import com.altn72.projetasta.service.EvaluationRapportService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,68 +11,63 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/evaluations")
-public class EvaluationEcoleControleur {
+public class EvaluationRapportControleur {
 
-    private final EvaluationEcoleService evaluationEcoleService;
+    private final EvaluationRapportService evaluationRapportService;
 
-    public EvaluationEcoleControleur(EvaluationEcoleService evaluationEcoleService) {
-        this.evaluationEcoleService = evaluationEcoleService;
+    public EvaluationRapportControleur(EvaluationRapportService evaluationRapportService) {
+        this.evaluationRapportService = evaluationRapportService;
     }
 
-    //Afficher la liste de toutes les évaluations
-
+    // Afficher toutes les évaluations
     @GetMapping
     public String afficherToutesLesEvaluations(Model model) {
-        List<EvaluationEcole> evaluations = evaluationEcoleService.getToutesLesEvaluations();
+        List<EvaluationRapport> evaluations = evaluationRapportService.getEvaluations();
         model.addAttribute("evaluations", evaluations);
         return "listeEvaluations";
     }
 
-    //Afficher une seule évaluation par ID
-
+    // Afficher une évaluation
     @GetMapping("/{id}")
-    public String afficherUneEvaluation(@PathVariable Integer id, Model model) {
-        Optional<EvaluationEcole> evaluation = evaluationEcoleService.getUneEvaluation(id);
+    public String afficherUneEvaluation(@PathVariable("id") Integer id, Model model) {
+        Optional<EvaluationRapport> evaluation = evaluationRapportService.getUneEvaluation(id);
         model.addAttribute("evaluation", evaluation.orElseThrow());
         return "detailsEvaluation";
     }
 
-    //Préparer le formulaire vierge pour ajouter une évaluation
-
-    @GetMapping("/preparerAjout")
-    public String preparerAjoutEvaluation(Model model) {
-        model.addAttribute("nouvelleEvaluation", new EvaluationEcole());
-        return "nouvelleEvaluation";
-    }
-
-    //Ajouter une nouvelle évaluation
-
-    @PostMapping("/ajouter")
-    public String ajouterEvaluation(@ModelAttribute EvaluationEcole evaluationEcole) {
-        evaluationEcoleService.ajouterUneEvaluation(evaluationEcole);
+    // Supprimer une évaluation
+    @DeleteMapping("/supprimer/{id}")
+    public String supprimerEvaluation(@PathVariable("id") Integer id) {
+        evaluationRapportService.supprimerEvaluation(id);
         return "redirect:/evaluations";
     }
 
-    //Préparer le formulaire pour modifier une évaluation existante
+    // Préparer l’ajout
+    @GetMapping("/preparerAjout")
+    public String preparerAjout(Model model) {
+        model.addAttribute("nouvelleEvaluation", new EvaluationRapport());
+        return "nouvelleEvaluation";
+    }
 
+    // Ajouter une évaluation
+    @PostMapping("/ajouter")
+    public String ajouterEvaluation(@ModelAttribute EvaluationRapport evaluation) {
+        evaluationRapportService.ajouterEvaluation(evaluation);
+        return "redirect:/evaluations";
+    }
+
+    // Préparer la modification
     @GetMapping("/preparerModif/{id}")
-    public String preparerModifEvaluation(@PathVariable Integer id, Model model) {
-        Optional<EvaluationEcole> evaluation = evaluationEcoleService.getUneEvaluation(id);
+    public String preparerModif(@PathVariable Integer id, Model model) {
+        Optional<EvaluationRapport> evaluation = evaluationRapportService.getUneEvaluation(id);
         model.addAttribute("evaluationToUpdate", evaluation.orElseThrow());
         return "detailsEvaluation";
     }
 
-    //Modifier une évaluation
+    // Modifier une évaluation
     @PutMapping("/modifier/{id}")
-    public String modifierEvaluation(@PathVariable Integer id, @ModelAttribute EvaluationEcole evaluationEcole) {
-        evaluationEcoleService.modifierUneEvaluation(id, evaluationEcole);
-        return "redirect:/evaluations";
-    }
-
-    //Supprimer une évaluation
-    @DeleteMapping("/supprimer/{id}")
-    public String supprimerEvaluation(@PathVariable Integer id) {
-        evaluationEcoleService.supprimerUneEvaluation(id);
+    public String modifierEvaluation(@PathVariable Integer id, @ModelAttribute EvaluationRapport evaluationModifiee) {
+        evaluationRapportService.modifierEvaluation(id, evaluationModifiee);
         return "redirect:/evaluations";
     }
 }

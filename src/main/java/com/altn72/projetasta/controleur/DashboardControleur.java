@@ -1,7 +1,7 @@
 package com.altn72.projetasta.controleur;
 
 import com.altn72.projetasta.modele.Apprenti;
-import com.altn72.projetasta.controleur.service.ApprentiService;
+import com.altn72.projetasta.service.ApprentiService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +32,7 @@ public class DashboardControleur {
         // Filtrer selon les critères de recherche (à implémenter dans le service)
         if (nom != null && !nom.isEmpty()) {
             apprentis = apprentis.stream()
-                    .filter(a -> a.getNom().toLowerCase().contains(nom.toLowerCase()))
+                    .filter(a -> a.getPersonne().getNom().toLowerCase().contains(nom.toLowerCase()))
                     .toList();
         }
 
