@@ -1,6 +1,8 @@
 package com.altn72.projetasta.modele;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "tuteur_enseignant")
@@ -10,6 +12,12 @@ public class TuteurEnseignant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
+
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "Id_personne", nullable = false)
+    private Personne personne;
 
     @Column(name = "nom", nullable = false, length = 100)
     private String nom;

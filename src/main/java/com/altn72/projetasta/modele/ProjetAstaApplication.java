@@ -1,4 +1,4 @@
-package com.altn72.projetasta;
+package com.altn72.projetasta.modele;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

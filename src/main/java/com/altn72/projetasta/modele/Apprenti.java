@@ -1,124 +1,46 @@
 package com.altn72.projetasta.modele;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-
+@Getter
+@Setter
 @Entity
-@Table(name = "apprenti")
+@Table(name = "apprenti", schema = "ASTA")
 public class Apprenti {
-
-    //informations de base
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "Id_personne", nullable = false)
     private Integer id;
 
-    @Column(name = "nom", nullable = false, length = 100)
-    private String nom;
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "Id_personne", nullable = false)
+    private Personne personne;
 
-    @Column(name = "prenom", nullable = false, length = 100)
-    private String prenom;
-
-    @Column(name = "email", length = 150)
-    private String email;
-
-    @Column(name = "telephone", length = 20)
-    private String telephone;
-
-    @Column(length = 50)
+    @Column(name = "programme", length = 45)
     private String programme;
 
-    @Column(length = 50)
+    @Column(name = "annee_academique", length = 45)
     private String anneeAcademique;
 
-    @Column(length = 100)
+    @Column(name = "majeure", length = 45)
     private String majeure;
 
-    //relations avec d'autres tab
+    @Column(name = "metier_cible", length = 45)
+    private String metierCible;
 
-    @ManyToOne
-    @JoinColumn(name = "entreprise_id")
-    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("apprentis")
-    private Entreprise entreprise;
+    @Lob
+    @Column(name = "commentaire_mission")
+    private String commentaireMission;
 
-    @OneToOne(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
-    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("apprenti")
-    private Mission mission;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "Id_entreprise")
+    private Entreprise idEntreprise;
 
-    // Getters & Setters
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-    public String getProgramme() {
-        return programme;
-    }
-    public void setProgramme(String programme) {
-        this.programme = programme;
-    }
-
-    public String getAnneeAcademique() {
-        return anneeAcademique;
-    }
-    public void setAnneeAcademique(String anneeAcademique) {
-        this.anneeAcademique = anneeAcademique;
-    }
-
-    public String getMajeure() {
-        return majeure;
-    }
-    public void setMajeure(String majeure) {
-        this.majeure = majeure;
-    }
-    public Entreprise getEntreprise() {
-        return entreprise;
-    }
-
-    public void setEntreprise(Entreprise entreprise) {
-        this.entreprise = entreprise;
-    }
-    public Mission getMission() {
-        return mission;
-    }
-
-    public void setMission(Mission mission) {
-        this.mission = mission;
-    }
 }

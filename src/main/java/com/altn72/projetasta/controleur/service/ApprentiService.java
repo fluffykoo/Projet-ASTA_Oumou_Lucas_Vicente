@@ -1,7 +1,6 @@
 package com.altn72.projetasta.controleur.service;
 
 import com.altn72.projetasta.modele.Apprenti;
-import com.altn72.projetasta.modele.repository.ApprentiRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

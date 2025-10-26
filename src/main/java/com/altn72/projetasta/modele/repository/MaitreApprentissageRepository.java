@@ -5,9 +5,8 @@
  */
 
 package com.altn72.projetasta.modele.repository;
-
 import com.altn72.projetasta.modele.MaitreApprentissage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MaitreApprentissageRepository extends JpaRepository<MaitreApprentissage, Integer> {
-}
+} 

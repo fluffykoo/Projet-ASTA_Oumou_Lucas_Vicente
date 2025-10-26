@@ -5,8 +5,9 @@
  */
 
 package com.altn72.projetasta.modele.repository;
-import com.altn72.projetasta.modele.TuteurEnseignant;
+import com.altn72.projetasta.modele.EvaluationRapport;
+import com.altn72.projetasta.modele.EvaluationRapportId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TuteurEnseignantRepository extends JpaRepository<TuteurEnseignant,Integer> {
-}rapport
+public interface EvaluationRapportRepository extends JpaRepository<EvaluationRapport, EvaluationRapportId> {
+}
