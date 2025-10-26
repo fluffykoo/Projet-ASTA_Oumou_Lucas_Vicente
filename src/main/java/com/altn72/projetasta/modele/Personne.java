@@ -7,8 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "personne", schema = "ASTA")
+@Table(name = "personne")
+@Inheritance(strategy = InheritanceType.JOINED)//chaque sous classe qui hérite de Personne à sa propre table
 public class Personne {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id", nullable = false)
@@ -25,5 +27,4 @@ public class Personne {
 
     @Column(name = "telephone", length = 20)
     private String telephone;
-
 }

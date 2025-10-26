@@ -9,18 +9,19 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Setter
 @Entity
-@Table(name = "rapport", schema = "ASTA")
+@Table(name = "rapport")
 public class Rapport {
-    @EmbeddedId
-    private RapportId id;
 
-    @MapsId("idApprenti")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id_rapport")
+    private Integer id;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "Id_apprenti", nullable = false)
-    private Apprenti idApprenti;
+    @OnDelete(action = OnDeleteAction.CASCADE)//si l'apprenti est supprimé, ses rapports le sont aussi
+    private Apprenti apprenti;
 
-    @Column(name = "Sujet", length = 45)
+    @Column(name = "Sujet", length = 100)
     private String sujet;
-
 }

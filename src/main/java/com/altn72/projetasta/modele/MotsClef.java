@@ -1,20 +1,24 @@
 package com.altn72.projetasta.modele;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "mots_clefs", schema = "ASTA")
+@Table(name = "mots_clefs")
 public class MotsClef {
+
     @Id
-    @Column(name = "Nom", nullable = false, length = 45)
+    @Column(name = "Nom", length = 45)
     private String nom;
 
-    //TODO [Reverse Engineering] generate columns from DB
+    // Relation ManyToMany avec Apprenti via la table d’association "posseder_mots_clefs"
+    @ManyToMany(mappedBy = "motsClefs")
+    private List<Apprenti> apprentis;
 }

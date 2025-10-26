@@ -5,21 +5,23 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "apprenti", schema = "ASTA")
+@Table(name = "apprenti")
 public class Apprenti {
+
     @Id
     @Column(name = "Id_personne", nullable = false)
     private Integer id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId // clé primaire partagée avec Personne
     @JoinColumn(name = "Id_personne", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Personne personne;
 
     @Column(name = "programme", length = 45)
@@ -39,8 +41,24 @@ public class Apprenti {
     private String commentaireMission;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Id_entreprise", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "Id_entreprise")
-    private Entreprise idEntreprise;
+    private Entreprise entreprise; // renommé
 
+    //Un apprenti peut avoir plusieurs rapports
+    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rapport> rapports;
+
+    // Un apprenti participe à plusieurs soutenances.
+    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Soutenance> soutenances;
+
+    // Un apprenti peut être associé à plusieurs mots-clés et un même mot-clé peut appartenir à plusieurs apprentis.
+    @ManyToMany
+    @JoinTable(
+            name = "posseder_mots_clefs",
+            joinColumns = @JoinColumn(name = "Id_personne"),
+            inverseJoinColumns = @JoinColumn(name = "Nom_mot_clef")
+    )
+    private List<MotsClef> motsClefs;
 }

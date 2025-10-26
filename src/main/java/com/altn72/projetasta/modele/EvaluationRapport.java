@@ -9,28 +9,28 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Setter
 @Entity
-@Table(name = "evaluation_rapport", schema = "ASTA")
+@Table(name = "evaluation_rapport")
 public class EvaluationRapport {
-    @EmbeddedId
-    private EvaluationRapportId id;
 
-    @MapsId("idPersonneTuteurEnseignant")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_evaluation")
+    private Integer id;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_personne_tuteur_enseignant", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "Id_personne_tuteur_enseignant", nullable = false)
-    private TuteurEnseignant idPersonneTuteurEnseignant;
+    private TuteurEnseignant tuteurEnseignant;
 
-    @MapsId("idRapport")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_rapport", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "Id_rapport", nullable = false, referencedColumnName = "Id_rapport")
-    private Rapport idRapport;
+    private Rapport rapport;
 
-    @Column(name = "note_final")
-    private Double noteFinal;
+    @Column(name = "note_finale")
+    private Double noteFinale;
 
     @Lob
     @Column(name = "commentaire")
     private String commentaire;
-
 }

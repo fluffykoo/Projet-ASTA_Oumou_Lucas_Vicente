@@ -1,67 +1,46 @@
 package com.altn72.projetasta.modele;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+
+import java.util.List;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "tuteur_enseignant")
 public class TuteurEnseignant {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Integer id;
+    @Column(name = "Id_personne")
+    private Integer id; // même clé que Personne
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId // partage la clé primaire avec Personne
     @JoinColumn(name = "Id_personne", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Personne personne;
 
-    @Column(name = "nom", nullable = false, length = 100)
-    private String nom;
+    @Column(name = "identifiant", length = 50)
+    private String identifiant;
 
-    @Column(name = "prenom", nullable = false, length = 100)
-    private String prenom;
-
-    @Column(name = "email", nullable = false, length = 150, unique = true)
-    private String email;
-
-    @Column(name = "password", nullable = false, length = 100)
+    @Column(name = "password", length = 255)
     private String password;
 
-    @Column(name = "telephone", length = 20)
-    private String telephone;
-
-    @Column(name = "remarques", columnDefinition = "TEXT")
-    private String remarques;
-
     @Column(name = "enabled", nullable = false)
-    private boolean enabled = true;
+    private boolean enabled;
 
-    // Getters & Setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    // Relations vers autres tables
 
-    public String getNom() { return nom; }
-    public void setNom(String nom) { this.nom = nom; }
+    // Un tuteur enseignant peut effectuer plusieurs visites
+    @OneToMany(mappedBy = "tuteurEnseignant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Visite> visites; // liste des visites faites par ce tuteur
 
-    public String getPrenom() { return prenom; }
-    public void setPrenom(String prenom) { this.prenom = prenom; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-
-    public String getTelephone() { return telephone; }
-    public void setTelephone(String telephone) { this.telephone = telephone; }
-
-    public String getRemarques() { return remarques; }
-    public void setRemarques(String remarques) { this.remarques = remarques; }
-
-    public boolean isEnabled() { return enabled; }
-    public void setEnabled(boolean enabled) { this.enabled = enabled; }
+    // Un tuteur enseignant peut participer à plusieurs soutenances
+    @OneToMany(mappedBy = "tuteurEnseignant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Soutenance> soutenances; // liste des soutenances encadrées par ce tuteur
 }

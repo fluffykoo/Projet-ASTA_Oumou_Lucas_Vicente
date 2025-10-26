@@ -6,33 +6,40 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Entity
-@Table(name = "soutenance", schema = "ASTA")
+@Table(name = "soutenance")
 public class Soutenance {
-    @EmbeddedId
-    private SoutenanceId id;
 
-    @MapsId("idPersonneTuteurEnseignant")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-incrémentation de l'id de soutenance
+    @Column(name = "Id_soutenance", nullable = false)
+    private Integer id;
+
+    // Une soutenance est toujours liée à un tuteur enseignant
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "Id_personne_tuteur_enseignant", nullable = false)
-    private TuteurEnseignant idPersonneTuteurEnseignant;
-
-    @MapsId("idPersonneMaitreApprentissage")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    private TuteurEnseignant tuteurEnseignant;
+
+    //  Une soutenance est toujours liée à un maître d’apprentissage
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "Id_personne_maitre_apprentissage", nullable = false)
-    private MaitreApprentissage idPersonneMaitreApprentissage;
-
-    @MapsId("idPersonneApprenti")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    private MaitreApprentissage maitreApprentissage;
+
+    // Une soutenance est toujours liée à un apprenti
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "Id_personne_apprenti", nullable = false)
-    private Apprenti idPersonneApprenti;
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Apprenti apprenti;
+
+    @Column(name = "Date_soutenance", nullable = false)
+    private LocalDate dateSoutenance;
 
     @Column(name = "Note_finale")
     private Double noteFinale;
-
 }
