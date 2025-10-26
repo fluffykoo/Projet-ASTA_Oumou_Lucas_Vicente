@@ -5,7 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 public class TuteurDetails implements UserDetails {
 
@@ -15,13 +15,23 @@ public class TuteurDetails implements UserDetails {
         this.tuteur = tuteur;
     }
 
-    public TuteurEnseignant getTuteur() {
-        return tuteur;
+    //  Données d'identité
+    public String getPrenom() {
+        return tuteur.getPersonne().getPrenom();
     }
+
+    public String getNom() {
+        return tuteur.getPersonne().getNom();
+    }
+
+    public String getEmail() {
+        return tuteur.getPersonne().getAdresseElectronique();
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "ROLE_TUTEUR");
+        return Collections.emptyList(); // Aucun rôle spécifique
     }
 
     @Override
@@ -31,26 +41,31 @@ public class TuteurDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return tuteur.getEmail();
-    }
-    public String getNom() {
-        return tuteur.getNom();
-    }
-
-    public String getPrenom() {
-        return tuteur.getPrenom();
+        return tuteur.getIdentifiant(); // identifiant de connexion
     }
 
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
     @Override
-    public boolean isCredentialsNonExpired() { return true; }
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
     @Override
-    public boolean isEnabled() { return tuteur.isEnabled(); }
+    public boolean isEnabled() {
+        return tuteur.isEnabled();
+    }
 
+    // Accès direct à l’objet Tuteur
+    public TuteurEnseignant getTuteur() {
+        return tuteur;
+    }
 }
