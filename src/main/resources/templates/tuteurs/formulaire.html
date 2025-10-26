@@ -1,10 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Ajouter un Tuteur Enseignant</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-$END$
+<h2>Ajouter un Tuteur Enseignant</h2>
+
+<form th:action="@{/tuteurs/ajouter}" th:object="${tuteur}" method="post">
+
+    <fieldset>
+        <legend>Informations Personnelles</legend>
+        <label>Prénom :</label>
+        <input type="text" th:field="*{personne.prenom}" required><br>
+
+        <label>Nom :</label>
+        <input type="text" th:field="*{personne.nom}" required><br>
+
+        <label>Email :</label>
+        <input type="email" th:field="*{personne.adresseElectronique}" required><br>
+
+        <label>Téléphone :</label>
+        <input type="text" th:field="*{personne.telephone}"><br>
+    </fieldset>
+
+    <fieldset>
+        <legend>Compte Tuteur</legend>
+        <label>Mot de passe :</label>
+        <input type="password" th:field="*{password}" required><br>
+
+        <label>Compte actif :</label>
+        <input type="checkbox" th:field="*{enabled}" checked><br>
+    </fieldset>
+
+    <button type="submit">Créer le tuteur</button>
+</form>
+
+<p><a th:href="@{/tuteurs}">Voir la liste des tuteurs</a></p>
+
 </body>
 </html>

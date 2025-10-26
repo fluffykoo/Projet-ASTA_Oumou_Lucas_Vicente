@@ -1,10 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Liste des Tuteurs Enseignants</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-$END$
+
+<h2>Liste des Tuteurs Enseignants</h2>
+
+<p>
+    <a th:href="@{/tuteurs/ajouter}">➕ Ajouter un nouveau tuteur</a>
+</p>
+
+<table border="1" cellspacing="0" cellpadding="8">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Identifiant</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Compte actif</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="t : ${tuteurs}">
+        <td th:text="${t.id}"></td>
+        <td th:text="${t.identifiant}"></td>
+        <td th:text="${t.personne != null ? t.personne.nom : '—'}"></td>
+        <td th:text="${t.personne != null ? t.personne.prenom : '—'}"></td>
+        <td th:text="${t.personne != null ? t.personne.adresseElectronique : '—'}"></td>
+        <td th:text="${t.personne != null ? t.personne.telephone : '—'}"></td>
+        <td th:text="${t.enabled} ? '✅' : '❌'"></td>
+        <td>
+            <a th:href="@{'/tuteurs/modifier/' + ${t.id}}">✏️ Modifier</a> |
+            <a th:href="@{'/tuteurs/supprimer/' + ${t.id}}"
+               onclick="return confirm('Confirmer la suppression ?');">🗑️ Supprimer</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p><a th:href="@{/dashboard}">← Retour au tableau de bord</a></p>
+
 </body>
 </html>
