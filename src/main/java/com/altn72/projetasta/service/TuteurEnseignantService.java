@@ -1,7 +1,10 @@
-package com.altn72.projetasta.controleur.service;
+package com.altn72.projetasta.service;
 
 import com.altn72.projetasta.modele.TuteurEnseignant;
 import com.altn72.projetasta.repository.TuteurEnseignantRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,34 +23,61 @@ public class TuteurEnseignantService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<TuteurEnseignant> getTousLesTuteurs() {
+    // Récupérer tous les tuteurs enseignants
+    public List<TuteurEnseignant> getTuteurs() {
         return tuteurEnseignantRepository.findAll();
     }
 
-    public Optional<TuteurEnseignant> getUnTuteur(Integer id) {
-        return tuteurEnseignantRepository.findById(id);
+    // Récupérer un tuteur enseignant par son ID
+    public Optional<TuteurEnseignant> getUnTuteur(Integer idTuteur) {
+        Optional<TuteurEnseignant> tuteur = tuteurEnseignantRepository.findById(idTuteur);
+        return Optional.ofNullable(
+                tuteur.orElseThrow(() ->
+                        new IllegalStateException("Le tuteur dont l'id est " + idTuteur + " n'existe pas"))
+        );
     }
 
-    public TuteurEnseignant ajouterUnTuteur(TuteurEnseignant tuteur) {
-        // encodage du mot de passe avant sauvegarde
-        String hashedPassword = passwordEncoder.encode(tuteur.getPassword());
-        tuteur.setPassword(hashedPassword);
-        tuteur.setEnabled(true);  // sécurité : compte actif par défaut
-        return tuteurEnseignantRepository.save(tuteur);
-    }
-
-    public void modifierUnTuteur(Integer id, TuteurEnseignant tuteur) {
-        tuteur.setId(id);
-        // si le mot de passe a changé, le réencoder
-        if (tuteur.getPassword() != null && !tuteur.getPassword().isEmpty()) {
-            tuteur.setPassword(passwordEncoder.encode(tuteur.getPassword()));
+    // Supprimer un tuteur enseignant
+    @Transactional
+    public void supprimerTuteur(Integer idTuteur) {
+        if (tuteurEnseignantRepository.existsById(idTuteur)) {
+            tuteurEnseignantRepository.deleteById(idTuteur);
+        } else {
+            throw new IllegalStateException("Le tuteur dont l'id est " + idTuteur + " n'existe pas");
         }
+    }
+
+    // Ajouter un nouveau tuteur enseignant
+    @Transactional
+    public void ajouterTuteur(TuteurEnseignant tuteur) {
+        if (tuteur.getPersonne() != null) {
+            String identifiant = genererIdentifiant(tuteur.getPersonne().getPrenom(), tuteur.getPersonne().getNom());
+            tuteur.setIdentifiant(identifiant);
+        }
+        tuteur.setPassword(passwordEncoder.encode(tuteur.getPassword()));
         tuteurEnseignantRepository.save(tuteur);
     }
 
-    public Optional<TuteurEnseignant> supprimerUnTuteur(Integer id) {
-        Optional<TuteurEnseignant> tuteur = tuteurEnseignantRepository.findById(id);
-        tuteur.ifPresent(tuteurEnseignantRepository::delete);
-        return tuteur;
+    // Modifier un tuteur enseignant existant
+    @Transactional
+    public void modifierTuteur(Integer idTuteur, TuteurEnseignant tuteurModifie) {
+        TuteurEnseignant tuteurExistant = tuteurEnseignantRepository.findById(idTuteur)
+                .orElseThrow(() -> new IllegalStateException("Le tuteur dont l'id est " + idTuteur + " n'existe pas"));
+
+        BeanUtils.copyProperties(tuteurModifie, tuteurExistant, "id", "personne", "password");
+
+        // On ne re-hash le mot de passe que s’il a été modifié
+        if (tuteurModifie.getPassword() != null && !tuteurModifie.getPassword().isBlank()) {
+            tuteurExistant.setPassword(passwordEncoder.encode(tuteurModifie.getPassword()));
+        }
+
+        tuteurEnseignantRepository.save(tuteurExistant);
+    }
+
+    private String genererIdentifiant(String prenom, String nom) {
+        if (prenom == null || nom == null) return "tuteur";
+        String id = (prenom.charAt(0) + nom).toLowerCase()
+                .replaceAll("[^a-z]", ""); // nettoie accents/symboles
+        return id.length() > 20 ? id.substring(0, 20) : id;
     }
 }

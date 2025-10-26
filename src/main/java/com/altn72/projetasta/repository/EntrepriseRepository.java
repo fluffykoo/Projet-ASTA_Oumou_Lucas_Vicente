@@ -4,7 +4,7 @@
  *
  */
 
-package com.altn72.projetasta.modele.repository;
+package com.altn72.projetasta.repository;
 import com.altn72.projetasta.modele.Entreprise;
 import org.springframework.data.jpa.repository.JpaRepository;
 

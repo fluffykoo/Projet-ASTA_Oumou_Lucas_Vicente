@@ -4,10 +4,10 @@
  *
  */
 
-package com.altn72.projetasta.modele.repository;
+package com.altn72.projetasta.repository;
 import com.altn72.projetasta.modele.Visite;
 import com.altn72.projetasta.modele.tmp.VisiteId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface VisiteRepository extends JpaRepository<Visite,VisiteId>{
+public interface VisiteRepository extends JpaRepository<Visite, Integer> {
 }

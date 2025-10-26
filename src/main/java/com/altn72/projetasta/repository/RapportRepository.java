@@ -4,10 +4,10 @@
  *
  */
 
-package com.altn72.projetasta.modele.repository;
+package com.altn72.projetasta.repository;
 import com.altn72.projetasta.modele.Rapport;
 import com.altn72.projetasta.modele.tmp.RapportId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RapportRepository extends JpaRepository<Rapport,RapportId> {
+public interface RapportRepository extends JpaRepository<Rapport,Integer> {
 }

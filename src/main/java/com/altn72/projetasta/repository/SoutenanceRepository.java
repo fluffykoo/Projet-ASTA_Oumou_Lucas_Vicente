@@ -4,10 +4,10 @@
  *
  */
 
-package com.altn72.projetasta.modele.repository;
+package com.altn72.projetasta.repository;
 import com.altn72.projetasta.modele.Soutenance;
 import com.altn72.projetasta.modele.tmp.SoutenanceId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SoutenanceRepository extends JpaRepository<Soutenance,SoutenanceId> {
+public interface SoutenanceRepository extends JpaRepository<Soutenance, Integer> {
 }

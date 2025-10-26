@@ -1,10 +1,10 @@
-package com.altn72.projetasta.controleur.service;
+package com.altn72.projetasta.service;
 
 import com.altn72.projetasta.modele.MaitreApprentissage;
 import com.altn72.projetasta.repository.MaitreApprentissageRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,38 +18,45 @@ public class MaitreApprentissageService {
         this.maitreApprentissageRepository = maitreApprentissageRepository;
     }
 
-    //Récupérer tous les maîtres d'apprentissage
-    public List<MaitreApprentissage> getTousLesMaitres() {
+    // Récupérer tous les maîtres d’apprentissage
+    public List<MaitreApprentissage> getMaitres() {
         return maitreApprentissageRepository.findAll();
     }
 
-    //Récupérer un maître par son ID
-    public Optional<MaitreApprentissage> getUnMaitre(Integer id) {
-        return maitreApprentissageRepository.findById(id);
+    // Récupérer un maître d’apprentissage par son ID
+    public Optional<MaitreApprentissage> getUnMaitre(Integer idMaitre) {
+        Optional<MaitreApprentissage> maitre = maitreApprentissageRepository.findById(idMaitre);
+        return Optional.ofNullable(
+                maitre.orElseThrow(() ->
+                        new IllegalStateException("Le maître d'apprentissage dont l'id est " + idMaitre + " n'existe pas"))
+        );
     }
 
-    //Ajouter un maître
-    public MaitreApprentissage ajouterUnMaitre(MaitreApprentissage maitre) {
-        return maitreApprentissageRepository.save(maitre);
-    }
+    // Supprimer un maître d’apprentissage
+    @Transactional
+    public void supprimerMaitre(Integer idMaitre) {
+        Optional<MaitreApprentissage> maitre = maitreApprentissageRepository.findById(idMaitre);
 
-    //Supprimer un maître
-    public Optional<MaitreApprentissage> supprimerUnMaitre(Integer id) {
-        Optional<MaitreApprentissage> maitre = maitreApprentissageRepository.findById(id);
         if (maitre.isPresent()) {
-            maitreApprentissageRepository.deleteById(id);
-            return maitre;
+            maitreApprentissageRepository.deleteById(idMaitre);
+        } else {
+            throw new IllegalStateException("Le maître d'apprentissage dont l'id est " + idMaitre + " n'existe pas");
         }
-        throw new IllegalStateException("Ce maître d'apprentissage n'existe pas");
     }
 
-    //Modifier un maître
-    @Transactional //pour assurer une mise à jour propre en base de donnée
-    public void modifierUnMaitre(Integer id, MaitreApprentissage maitreModifie) {
-        MaitreApprentissage maitreToModify = maitreApprentissageRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Ce maître d'apprentissage n'existe pas"));
+    // Ajouter un maître d’apprentissage
+    @Transactional
+    public void ajouterMaitre(MaitreApprentissage maitreApprentissage) {
+        maitreApprentissageRepository.save(maitreApprentissage);
+    }
 
-        BeanUtils.copyProperties(maitreModifie, maitreToModify, "id");
+    // Modifier un maître d’apprentissage existant
+    @Transactional
+    public void modifierMaitre(Integer idMaitre, MaitreApprentissage maitreModifie) {
+        MaitreApprentissage maitreToModify = maitreApprentissageRepository.findById(idMaitre)
+                .orElseThrow(() -> new IllegalStateException("Le maître d'apprentissage dont l'id est " + idMaitre + " n'existe pas"));
+
+        BeanUtils.copyProperties(maitreModifie, maitreToModify, "id", "personne");
         maitreApprentissageRepository.save(maitreToModify);
     }
 }
