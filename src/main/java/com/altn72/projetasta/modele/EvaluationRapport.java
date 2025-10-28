@@ -17,12 +17,12 @@ public class EvaluationRapport {
     @Column(name = "id_evaluation")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_personne_tuteur_enseignant", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private TuteurEnseignant tuteurEnseignant;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_rapport", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Rapport rapport;

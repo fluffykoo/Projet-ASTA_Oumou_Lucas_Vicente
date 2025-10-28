@@ -2,6 +2,7 @@ package com.altn72.projetasta.controleur;
 
 import com.altn72.projetasta.modele.Personne;
 import com.altn72.projetasta.modele.TuteurEnseignant;
+import com.altn72.projetasta.service.PersonneService;
 import com.altn72.projetasta.service.TuteurEnseignantService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 public class TuteurEnseignantControleur {
 
     private final TuteurEnseignantService tuteurEnseignantService;
+    private final PersonneService personneService;
 
-    public TuteurEnseignantControleur(TuteurEnseignantService tuteurEnseignantService) {
+    public TuteurEnseignantControleur(TuteurEnseignantService tuteurEnseignantService, PersonneService personneService) {
         this.tuteurEnseignantService = tuteurEnseignantService;
+        this.personneService = personneService;
     }
 
     // Liste des tuteurs enseignants
@@ -59,5 +62,11 @@ public class TuteurEnseignantControleur {
     public String supprimerTuteur(@PathVariable("id") Integer id) {
         tuteurEnseignantService.supprimerTuteur(id);
         return "redirect:/tuteurs";
+    }
+
+    //Récupérer nom
+    @GetMapping("/recuperernompersonne/{id}")
+    public String recupererNompersonne(@PathVariable("id") Integer id) {
+        return personneService.RecupererNomPersonne(id);
     }
 }

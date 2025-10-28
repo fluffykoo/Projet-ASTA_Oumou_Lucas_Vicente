@@ -18,7 +18,7 @@ public class Apprenti {
     @Column(name = "Id_personne", nullable = false)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @MapsId // clé primaire partagée avec Personne
     @JoinColumn(name = "Id_personne", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -40,7 +40,7 @@ public class Apprenti {
     @Column(name = "commentaire_mission")
     private String commentaireMission;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "Id_entreprise", nullable = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Entreprise entreprise; // renommé

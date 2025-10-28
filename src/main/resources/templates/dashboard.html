@@ -22,7 +22,7 @@
         </a>
         <div class="navbar-nav ms-auto">
             <span class="navbar-text user-info me-3" th:if="${#authentication}">
-                Bonjour <span th:text="${#authentication.principal.prenom}">Tuteur</span> |
+                Bonjour <span th:text="${#authentication.name}">Tuteur</span> |
                 <a href="#" class="text-white text-decoration-none" onclick="document.getElementById('logoutForm').submit();">
                     Déconnectez-vous
                 </a>

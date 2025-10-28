@@ -1,8 +1,10 @@
 package com.altn72.projetasta.service;
 
 import com.altn72.projetasta.modele.Apprenti;
+import com.altn72.projetasta.modele.Entreprise;
 import com.altn72.projetasta.modele.Personne;
 import com.altn72.projetasta.repository.ApprentiRepository;
+import com.altn72.projetasta.repository.EntrepriseRepository;
 import com.altn72.projetasta.repository.PersonneRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
@@ -16,11 +18,13 @@ public class ApprentiService {
 
     private final ApprentiRepository apprentiRepository;
     private final PersonneRepository personneRepository;
+    private final EntrepriseRepository entrepriseRepository;
 
     public ApprentiService(ApprentiRepository apprentiRepository,
-                           PersonneRepository personneRepository) {
+                           PersonneRepository personneRepository, EntrepriseRepository entrepriseRepository) {
         this.apprentiRepository = apprentiRepository;
         this.personneRepository = personneRepository;
+        this.entrepriseRepository = entrepriseRepository;
     }
     //Récupérer tous les apprentis
     public List<Apprenti> getTousLesApprentis() {
@@ -60,21 +64,6 @@ public class ApprentiService {
         Apprenti apprentiExistant = apprentiRepository.findById(idApprenti)
                 .orElseThrow(() -> new IllegalStateException("L'apprenti dont l'id est " + idApprenti + " n'existe pas"));
         //  Mise à jour des champs de Apprenti
-        BeanUtils.copyProperties(apprentiModifie, apprentiExistant, "id", "personne");
-
-        //  Mise à jour des champs Personne liés
-        if (apprentiExistant.getPersonne() != null && apprentiModifie.getPersonne() != null) {
-            Personne personneExistante = apprentiExistant.getPersonne();
-            Personne personneModifiee = apprentiModifie.getPersonne();
-
-            personneExistante.setNom(personneModifiee.getNom());
-            personneExistante.setPrenom(personneModifiee.getPrenom());
-            personneExistante.setAdresseElectronique(personneModifiee.getAdresseElectronique());
-            personneExistante.setTelephone(personneModifiee.getTelephone());
-
-            personneRepository.save(personneExistante);
-        }
-
-        apprentiRepository.save(apprentiExistant);
+        BeanUtils.copyProperties(apprentiModifie, apprentiExistant, "id", "personne","motsClefs","soutenances","rapports","entreprise");
     }
 }

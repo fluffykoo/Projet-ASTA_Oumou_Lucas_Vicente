@@ -17,12 +17,12 @@ public class Visite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)//pour éviter de surcharger la memoire et charger toutes les infos d'un coup
+    @ManyToOne(fetch = FetchType.EAGER)//pour éviter de surcharger la memoire et charger toutes les infos d'un coup
     @JoinColumn(name = "id_personne_tuteur_enseignant", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private TuteurEnseignant tuteurEnseignant;
 
-    @ManyToOne(fetch = FetchType.LAZY)//pour éviter de surcharger la memoire et charger toutes les infos d'un coup
+    @ManyToOne(fetch = FetchType.EAGER)//pour éviter de surcharger la memoire et charger toutes les infos d'un coup
     @JoinColumn(name = "id_entreprise", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Entreprise entreprise;
