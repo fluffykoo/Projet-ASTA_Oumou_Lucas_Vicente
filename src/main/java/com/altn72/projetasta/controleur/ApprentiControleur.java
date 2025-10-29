@@ -215,11 +215,20 @@ public class ApprentiControleur {
     @Autowired
     private RapportService rapportService;
 
-    // Liste de tous les apprentis
-    @GetMapping
-    public String afficherTousLesApprentis(Model model) {
-        model.addAttribute("lesApprentis", apprentiService.getTousLesApprentis());
-        return "listeApprentis";
+//    // Liste de tous les apprentis
+//    @GetMapping
+//    public String afficherTousLesApprentis(Model model) {
+//        model.addAttribute("lesApprentis", apprentiService.getTousLesApprentis());
+//        return "listeApprentis";
+//    }
+
+    // Formulaire d’ajout d’un nouvel apprenti
+    @GetMapping("/preparerAjout")
+    public String preparerAjout(Model model) {
+        model.addAttribute("nouvelApprenti", new Apprenti());
+        model.addAttribute("entreprises", entrepriseRepository.findAll());
+        model.addAttribute("anneeEnCours", "2025-2026");
+        return "ajouter-apprenti";
     }
 
     // Détails d’un apprenti
@@ -246,7 +255,7 @@ public class ApprentiControleur {
         return "apprenti-details";
     }
      //Ajouter un apprenti
-    @PostMapping
+    @PostMapping("/ajouter")
     public String ajouterApprenti(@ModelAttribute("nouvelApprenti") Apprenti apprenti,
                                   RedirectAttributes redirectAttributes) {
         try {
@@ -303,34 +312,47 @@ public class ApprentiControleur {
     }
     // Ajouter une évaluation pour un rapport sélectionné
     @PostMapping("/{id}/evaluations")
-    public String ajouterEvaluationApprenti(@PathVariable Integer id,
-                                            @ModelAttribute("newEvaluation") EvaluationRapport evaluation,
-                                            RedirectAttributes redirectAttributes) {
+    public String ajouterEvaluationApprenti(
+            @PathVariable Integer id,
+            @ModelAttribute("newEvaluation") EvaluationRapport evaluation,
+            RedirectAttributes redirectAttributes) {
+
         try {
-            // Récupère l'apprenti
+            // 1️⃣ Vérifier que l'apprenti existe
             Apprenti apprenti = apprentiService.getUnApprenti(id)
                     .orElseThrow(() -> new IllegalStateException("Apprenti introuvable"));
 
-            // Pour éviter le bug Hibernate : forcer l’ID à null INSERT au lieu d’UPDATE
-            evaluation.setId(null);
-
-            // Récupère le rapport sélectionné dans le formulaire
-
-            Rapport rapport = apprenti.getRapports().get(0);
-
-            evaluation.setRapport(rapport);
-            evaluation.setApprenti(apprenti);
-
-
-            if (!apprenti.getVisites().isEmpty()) {
-                evaluation.setTuteurEnseignant(apprenti.getVisites().get(0).getTuteurEnseignant());
+            // 2️⃣ Vérifier que le rapport a été choisi dans le formulaire
+            if (evaluation.getRapport() == null || evaluation.getRapport().getId() == null) {
+                throw new IllegalStateException("Aucun rapport sélectionné !");
             }
 
+            // 3️⃣ Charger le rapport complet depuis la BDD
+            Rapport rapport = rapportService.getUnRapport(evaluation.getRapport().getId())
+                    .orElseThrow(() -> new IllegalStateException("Rapport introuvable !"));
+
+            // 4️⃣ Associer l'apprenti et le rapport
+            evaluation.setId(null); // force un INSERT (sinon Hibernate fait un merge)
+            evaluation.setApprenti(apprenti);
+            evaluation.setRapport(rapport);
+
+            // 5️⃣ Récupérer le tuteur enseignant à partir de la dernière visite, s’il existe
+            if (!apprenti.getVisites().isEmpty()) {
+                evaluation.setTuteurEnseignant(
+                        apprenti.getVisites().get(0).getTuteurEnseignant()
+                );
+            } else {
+                throw new IllegalStateException("Aucune visite enregistrée pour déterminer le tuteur enseignant !");
+            }
+
+            // 6️⃣ Enregistrer l’évaluation
             evaluationRapportService.ajouterEvaluation(evaluation);
             redirectAttributes.addFlashAttribute("successMessage", "Évaluation ajoutée avec succès !");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Erreur ajout évaluation : " + e.getMessage());
         }
+
+        // Recharge la page de l'apprenti
         return "redirect:/apprentis/" + id;
     }
 }

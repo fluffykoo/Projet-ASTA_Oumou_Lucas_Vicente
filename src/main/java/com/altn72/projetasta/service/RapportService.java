@@ -64,4 +64,13 @@ public class RapportService {
         BeanUtils.copyProperties(rapportModifie, rapportToModify, "id");
         rapportRepository.save(rapportToModify);
     }
+    // Compter le total de rapports
+    public long countTotal() {
+        return rapportRepository.count();
+    }
+
+    // Compter les rapports non évalués
+    public long countNonEvalues() {
+        return rapportRepository.countRapportsNonEvalues();
+    }
 }

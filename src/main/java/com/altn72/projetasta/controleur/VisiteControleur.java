@@ -70,4 +70,6 @@ public class VisiteControleur {
         visiteService.modifierVisite(id, visiteModifiee);
         return "redirect:/visites";
     }
+
+
 }

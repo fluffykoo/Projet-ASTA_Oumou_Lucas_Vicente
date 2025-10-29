@@ -90,4 +90,8 @@ public class VisiteService {
         //  Sauvegarde
         visiteRepository.save(visite);
     }
+    //pour le dashboard
+    public List<Visite> getVisitesAVenirByTuteur(Integer idTuteur) {
+        return visiteRepository.findVisitesAVenirByTuteur(idTuteur);
+    }
 }

@@ -67,5 +67,8 @@ public class Apprenti {
     @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Visite> visites = new ArrayList<>();
 
-
+    //relation avec son tuteur enseignant
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Id_tuteur_enseignant")
+    private TuteurEnseignant tuteurEnseignant;
 }

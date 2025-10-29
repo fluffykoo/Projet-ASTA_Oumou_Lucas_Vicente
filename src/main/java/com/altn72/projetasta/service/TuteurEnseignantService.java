@@ -36,6 +36,9 @@ public class TuteurEnseignantService {
                         new IllegalStateException("Le tuteur dont l'id est " + idTuteur + " n'existe pas"))
         );
     }
+    public Optional<TuteurEnseignant> getByIdentifiant(String identifiant) {
+        return tuteurEnseignantRepository.findByIdentifiant(identifiant);
+    }
 
     // Supprimer un tuteur enseignant
     @Transactional
@@ -80,4 +83,5 @@ public class TuteurEnseignantService {
                 .replaceAll("[^a-z]", ""); // nettoie accents/symboles
         return id.length() > 20 ? id.substring(0, 20) : id;
     }
+
 }

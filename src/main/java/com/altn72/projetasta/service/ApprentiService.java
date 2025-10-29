@@ -77,4 +77,8 @@ public class ApprentiService {
 
         apprentiRepository.save(apprentiExistant);
     }
+
+    public List<Apprenti> getApprentisParTuteur(String identifiant) {
+        return apprentiRepository.findByTuteurEnseignant_Identifiant(identifiant);
+    }
 }
