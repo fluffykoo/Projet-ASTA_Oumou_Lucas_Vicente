@@ -10,4 +10,5 @@ import com.altn72.projetasta.modele.tmp.VisiteId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface VisiteRepository extends JpaRepository<Visite, Integer> {
+
 }
