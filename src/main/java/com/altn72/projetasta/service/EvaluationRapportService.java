@@ -1,9 +1,13 @@
 package com.altn72.projetasta.service;
 
+import com.altn72.projetasta.modele.Apprenti;
 import com.altn72.projetasta.modele.EvaluationRapport;
+import com.altn72.projetasta.modele.Rapport;
+import com.altn72.projetasta.repository.ApprentiRepository;
 import com.altn72.projetasta.repository.EvaluationRapportRepository;
+import com.altn72.projetasta.repository.RapportRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,50 +16,54 @@ import java.util.Optional;
 @Service
 public class EvaluationRapportService {
 
-    private final EvaluationRapportRepository evaluationRapportRepository;
+    @Autowired
+    private EvaluationRapportRepository evaluationRapportRepository;
 
-    public EvaluationRapportService(EvaluationRapportRepository evaluationRapportRepository) {
-        this.evaluationRapportRepository = evaluationRapportRepository;
-    }
+    @Autowired
+    private RapportRepository rapportRepository;
 
-    // Récupérer toutes les évaluations
+    @Autowired
+    private ApprentiRepository apprentiRepository;
+
+    //Récupérer toutes les évaluations
     public List<EvaluationRapport> getEvaluations() {
         return evaluationRapportRepository.findAll();
     }
 
-    // Récupérer une évaluation par son id
-    public Optional<EvaluationRapport> getUneEvaluation(Integer id) {
-        return Optional.ofNullable(
-                evaluationRapportRepository.findById(id)
-                        .orElseThrow(() -> new IllegalStateException("L'évaluation dont l'id est " + id + " n'existe pas"))
-        );
+    //Récupérer une évaluation par son ID
+    public Optional<EvaluationRapport> getUneEvaluation(Integer idEvaluation) {
+        return evaluationRapportRepository.findById(idEvaluation);
     }
 
-    // Supprimer une évaluation
-    @Transactional
-    public void supprimerEvaluation(Integer id) {
-        Optional<EvaluationRapport> evaluation = evaluationRapportRepository.findById(id);
-
-        if (evaluation.isPresent()) {
-            evaluationRapportRepository.deleteById(id);
-        } else {
-            throw new IllegalStateException("L'évaluation dont l'id est " + id + " n'existe pas");
-        }
-    }
-
-    // Ajouter une évaluation
+    //  Ajouter une évaluation
     @Transactional
     public void ajouterEvaluation(EvaluationRapport evaluation) {
+        Rapport rapport = rapportRepository.findById(evaluation.getRapport().getId())
+                .orElseThrow(() -> new IllegalStateException("Rapport introuvable"));
+
+        Apprenti apprenti = apprentiRepository.findById(rapport.getApprenti().getId())
+                .orElseThrow(() -> new IllegalStateException("Apprenti introuvable"));
+
+        evaluation.setRapport(rapport);
+        evaluation.setApprenti(apprenti);
+
         evaluationRapportRepository.save(evaluation);
     }
-
-    // Modifier une évaluation
     @Transactional
-    public void modifierEvaluation(Integer id, EvaluationRapport evaluationModifiee) {
-        EvaluationRapport evaluationToModify = evaluationRapportRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("L'évaluation dont l'id est " + id + " n'existe pas"));
+    public void modifierEvaluation(Integer idEvaluation, EvaluationRapport evaluationModifiee) {
+        EvaluationRapport evaluationExistante = evaluationRapportRepository.findById(idEvaluation)
+                .orElseThrow(() -> new IllegalStateException("Évaluation introuvable avec l’ID : " + idEvaluation));
 
-        BeanUtils.copyProperties(evaluationModifiee, evaluationToModify, "id");
-        evaluationRapportRepository.save(evaluationToModify);
+        // Copie des champs modifiables
+        evaluationExistante.setNoteFinale(evaluationModifiee.getNoteFinale());
+        evaluationExistante.setCommentaire(evaluationModifiee.getCommentaire());
+
+        // On ne touche pas au rapport / apprenti / tuteur pour éviter des erreurs de mapping
+        evaluationRapportRepository.save(evaluationExistante);
+    }
+    // Supprimer une évaluation
+    @Transactional
+    public void supprimerEvaluation(Integer idEvaluation) {
+        evaluationRapportRepository.deleteById(idEvaluation);
     }
 }

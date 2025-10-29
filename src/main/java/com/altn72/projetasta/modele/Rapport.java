@@ -6,6 +6,9 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -24,4 +27,12 @@ public class Rapport {
 
     @Column(name = "Sujet", length = 100)
     private String sujet;
+
+    //relation avec apprenti
+    @OneToMany(mappedBy = "rapport", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EvaluationRapport> evaluations = new ArrayList<>();
+
+    // Relation avec EvaluationRapport
+    @OneToMany(mappedBy = "rapport", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EvaluationRapport> evaluationsRapport = new ArrayList<>();
 }

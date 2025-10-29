@@ -32,6 +32,11 @@ public class RapportService {
         );
     }
 
+    //  Récupérer les rapports d’un apprenti sans évaluation
+    public List<Rapport> getRapportsNonEvaluesPourApprenti(Integer idApprenti) {
+        return rapportRepository.findRapportsNonEvalues(idApprenti);
+    }
+
     // Supprimer un rapport
     @Transactional
     public void supprimerRapport(Integer idRapport) {

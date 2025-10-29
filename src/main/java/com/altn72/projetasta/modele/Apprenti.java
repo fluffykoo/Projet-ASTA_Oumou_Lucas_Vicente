@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -61,4 +62,10 @@ public class Apprenti {
             inverseJoinColumns = @JoinColumn(name = "Nom_mot_clef")
     )
     private List<MotsClef> motsClefs;
+
+    //relation apprenti visite
+    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Visite> visites = new ArrayList<>();
+
+
 }

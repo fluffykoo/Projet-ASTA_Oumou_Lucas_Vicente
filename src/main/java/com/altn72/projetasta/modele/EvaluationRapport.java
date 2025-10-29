@@ -27,6 +27,11 @@ public class EvaluationRapport {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Rapport rapport;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_apprenti", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Apprenti apprenti;
+
     @Column(name = "note_finale")
     private Double noteFinale;
 

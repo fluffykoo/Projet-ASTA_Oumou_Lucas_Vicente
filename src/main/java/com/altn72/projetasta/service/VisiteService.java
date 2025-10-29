@@ -1,7 +1,9 @@
 package com.altn72.projetasta.service;
 
+import com.altn72.projetasta.modele.Apprenti;
 import com.altn72.projetasta.modele.Visite;
 import com.altn72.projetasta.repository.VisiteRepository;
+import com.altn72.projetasta.repository.ApprentiRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,12 @@ import java.util.Optional;
 public class VisiteService {
 
     private final VisiteRepository visiteRepository;
+    private final ApprentiRepository apprentiRepository;
 
-    public VisiteService(VisiteRepository visiteRepository) {
+    // Injection des dépendances via constructeur
+    public VisiteService(VisiteRepository visiteRepository, ApprentiRepository apprentiRepository) {
         this.visiteRepository = visiteRepository;
+        this.apprentiRepository = apprentiRepository;
     }
 
     // Récupérer toutes les visites
@@ -58,5 +63,18 @@ public class VisiteService {
 
         BeanUtils.copyProperties(visiteModifiee, visiteToModify, "id");
         visiteRepository.save(visiteToModify);
+    }
+
+    // ajout d’une visite liée à un apprenti spécifique
+    @Transactional
+    public void ajouterVisitePourApprenti(Integer idApprenti, Visite visite) {
+        Apprenti apprenti = apprentiRepository.findById(idApprenti)
+                .orElseThrow(() -> new IllegalStateException("Apprenti introuvable"));
+
+        // Association automatique des entités liées
+        visite.setApprenti(apprenti);
+        visite.setEntreprise(apprenti.getEntreprise());
+
+        visiteRepository.save(visite);
     }
 }
