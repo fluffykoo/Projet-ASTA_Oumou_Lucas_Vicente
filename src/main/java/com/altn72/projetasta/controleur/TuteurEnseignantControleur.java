@@ -1,65 +1,72 @@
 package com.altn72.projetasta.controleur;
 
+import com.altn72.projetasta.modele.Personne;
 import com.altn72.projetasta.modele.TuteurEnseignant;
-import com.altn72.projetasta.controleur.service.TuteurEnseignantService;
+import com.altn72.projetasta.service.PersonneService;
+import com.altn72.projetasta.service.TuteurEnseignantService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/tuteurs")
 public class TuteurEnseignantControleur {
 
     private final TuteurEnseignantService tuteurEnseignantService;
+    private final PersonneService personneService;
 
-    public TuteurEnseignantControleur(TuteurEnseignantService tuteurEnseignantService) {
+    public TuteurEnseignantControleur(TuteurEnseignantService tuteurEnseignantService, PersonneService personneService) {
         this.tuteurEnseignantService = tuteurEnseignantService;
+        this.personneService = personneService;
     }
 
-    // Liste des tuteurs
+    // Liste des tuteurs enseignants
     @GetMapping
-    public String afficherTousLesTuteurs(Model model) {
-        List<TuteurEnseignant> tuteurs = tuteurEnseignantService.getTousLesTuteurs();
-        model.addAttribute("tuteurs", tuteurs);
-        return "listeTuteurs"; // correspond au fichier listeTuteurs.html
+    public String listeTuteurs(Model model) {
+        model.addAttribute("tuteurs", tuteurEnseignantService.getTuteurs());
+        return "tuteurs/liste"; // --> tuteurs/liste.html
     }
 
-    //Supprimer un tuteur
-    @DeleteMapping("/supprimer/{id}")
-    public String supprimerUnTuteur(@PathVariable Integer id) {
-        tuteurEnseignantService.supprimerUnTuteur(id);
-        return "redirect:/tuteurs";
+    // Préparer formulaire d’ajout
+    @GetMapping("/ajouter")
+    public String preparerAjout(Model model) {
+        TuteurEnseignant tuteur = new TuteurEnseignant();
+        tuteur.setPersonne(new Personne()); //
+        model.addAttribute("tuteur", tuteur);
+        return "tuteurs/formulaire";
     }
-
-    //Préparer formulaire d'ajout
-    @GetMapping("/preparerAjout")
-    public String preparerAjoutTuteur(Model model) {
-        model.addAttribute("nouveauTuteur", new TuteurEnseignant());
-        return "nouveauTuteur"; // correspond au formulaire d'ajout
-    }
-
-    //Ajouter un tuteur
+    // Soumettre formulaire d’ajout
     @PostMapping("/ajouter")
-    public String ajouterUnTuteur(@ModelAttribute TuteurEnseignant tuteur) {
-        tuteurEnseignantService.ajouterUnTuteur(tuteur);
+    public String ajouterTuteur(@ModelAttribute("tuteur") TuteurEnseignant tuteur) {
+        tuteurEnseignantService.ajouterTuteur(tuteur); // hash automatique
         return "redirect:/tuteurs";
     }
 
-    //Préparer formulaire de modification
-    @GetMapping("/preparerModif/{id}")
-    public String preparerModifTuteur(@PathVariable Integer id, Model model) {
-        Optional<TuteurEnseignant> tuteur = tuteurEnseignantService.getUnTuteur(id);
-        model.addAttribute("tuteurToUpdate", tuteur.orElseThrow());
-        return "detailsTuteur"; // correspond au fichier détails de modification
+    // Préparer modification
+    @GetMapping("/modifier/{id}")
+    public String preparerModification(@PathVariable("id") Integer id, Model model) {
+        model.addAttribute("tuteur", tuteurEnseignantService.getUnTuteur(id).orElseThrow());
+        return "tuteurs/formulaire";
     }
 
-    //Modifier un tuteur
-    @PutMapping("/modifier/{id}")
-    public String modifierUnTuteur(@PathVariable Integer id, @ModelAttribute TuteurEnseignant tuteurModifie) {
-        tuteurEnseignantService.modifierUnTuteur(id, tuteurModifie);
+    // Soumettre modification
+    @PostMapping("/modifier/{id}")
+    public String modifierTuteur(@PathVariable("id") Integer id,
+                                 @ModelAttribute("tuteur") TuteurEnseignant tuteur) {
+        tuteurEnseignantService.modifierTuteur(id, tuteur); // re-hash si modifié
         return "redirect:/tuteurs";
+    }
+
+    // Supprimer
+    @GetMapping("/supprimer/{id}")
+    public String supprimerTuteur(@PathVariable("id") Integer id) {
+        tuteurEnseignantService.supprimerTuteur(id);
+        return "redirect:/tuteurs";
+    }
+
+    //Récupérer nom
+    @GetMapping("/recuperernompersonne/{id}")
+    public String recupererNompersonne(@PathVariable("id") Integer id) {
+        return personneService.RecupererNomPersonne(id);
     }
 }

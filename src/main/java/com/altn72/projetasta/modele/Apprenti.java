@@ -1,124 +1,81 @@
 package com.altn72.projetasta.modele;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "apprenti")
 public class Apprenti {
 
-    //informations de base
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "Id_personne", nullable = false)
     private Integer id;
 
-    @Column(name = "nom", nullable = false, length = 100)
-    private String nom;
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId // clé primaire partagée avec Personne
+    @JoinColumn(name = "Id_personne", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Personne personne;
 
-    @Column(name = "prenom", nullable = false, length = 100)
-    private String prenom;
-
-    @Column(name = "email", length = 150)
-    private String email;
-
-    @Column(name = "telephone", length = 20)
-    private String telephone;
-
-    @Column(length = 50)
+    @Column(name = "programme", length = 45)
     private String programme;
 
-    @Column(length = 50)
-    private String anneeAcademique;
+//    @Column(name = "annee_academique", length = 45)
+//    private String anneeAcademique;
 
-    @Column(length = 100)
+    @Column(name = "majeure", length = 45)
     private String majeure;
 
-    //relations avec d'autres tab
+    @Column(name = "metier_cible", length = 45)
+    private String metierCible;
 
-    @ManyToOne
-    @JoinColumn(name = "entreprise_id")
-    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("apprentis")
-    private Entreprise entreprise;
+    @Lob
+    @Column(name = "commentaire_mission")
+    private String commentaireMission;
 
-    @OneToOne(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
-    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("apprenti")
-    private Mission mission;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Id_entreprise", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Entreprise entreprise; // renommé
 
-    // Getters & Setters
-    public Integer getId() {
-        return id;
-    }
+    //Un apprenti peut avoir plusieurs rapports
+    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rapport> rapports;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    // Un apprenti participe à plusieurs soutenances.
+    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Soutenance> soutenances;
 
-    public String getNom() {
-        return nom;
-    }
+    // Un apprenti peut être associé à plusieurs mots-clés et un même mot-clé peut appartenir à plusieurs apprentis.
+    @ManyToMany
+    @JoinTable(
+            name = "posseder_mots_clefs",
+            joinColumns = @JoinColumn(name = "Id_personne"),
+            inverseJoinColumns = @JoinColumn(name = "Nom_mot_clef")
+    )
+    private List<MotsClef> motsClefs;
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
+    //relation apprenti visite
+    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Visite> visites = new ArrayList<>();
 
-    public String getPrenom() {
-        return prenom;
-    }
+    //relation avec son tuteur enseignant
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Id_tuteur_enseignant")
+    private TuteurEnseignant tuteurEnseignant;
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "annee_id")
+    private AnneeAcademique anneeAcademique;
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-    public String getProgramme() {
-        return programme;
-    }
-    public void setProgramme(String programme) {
-        this.programme = programme;
-    }
-
-    public String getAnneeAcademique() {
-        return anneeAcademique;
-    }
-    public void setAnneeAcademique(String anneeAcademique) {
-        this.anneeAcademique = anneeAcademique;
-    }
-
-    public String getMajeure() {
-        return majeure;
-    }
-    public void setMajeure(String majeure) {
-        this.majeure = majeure;
-    }
-    public Entreprise getEntreprise() {
-        return entreprise;
-    }
-
-    public void setEntreprise(Entreprise entreprise) {
-        this.entreprise = entreprise;
-    }
-    public Mission getMission() {
-        return mission;
-    }
-
-    public void setMission(Mission mission) {
-        this.mission = mission;
-    }
+    @Column(nullable = false)
+    private boolean archive = false;
 }

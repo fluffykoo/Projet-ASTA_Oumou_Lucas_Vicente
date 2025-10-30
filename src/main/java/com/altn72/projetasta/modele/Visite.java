@@ -1,94 +1,48 @@
 package com.altn72.projetasta.modele;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import java.time.LocalDate;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "visite")
 public class Visite {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Integer id;
+
+    @ManyToOne(fetch = FetchType.LAZY)//pour éviter de surcharger la memoire et charger toutes les infos d'un coup
+    @JoinColumn(name = "id_personne_tuteur_enseignant", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private TuteurEnseignant tuteurEnseignant;
+
+    @ManyToOne(fetch = FetchType.LAZY)//pour éviter de surcharger la memoire et charger toutes les infos d'un coup
+    @JoinColumn(name = "id_apprenti", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Apprenti apprenti;
+
+    @ManyToOne(fetch = FetchType.LAZY)//pour éviter de surcharger la memoire et charger toutes les infos d'un coup
+    @JoinColumn(name = "id_entreprise", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Entreprise entreprise;
 
     @Column(name = "date_visite", nullable = false)
     private LocalDate dateVisite;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "format", nullable = false, length = 20)
-    private FormatVisite format;
+    @Column(name = "format_visite", nullable = false)
+    private FormatVisite formatVisite;
 
-    @Column(name = "commentaire", columnDefinition = "TEXT")
+    @Lob
     private String commentaire;
 
-    @ManyToOne
-    @JoinColumn(name = "apprenti_id", nullable = false)
-    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("visites")
-    private Apprenti apprenti;
-
-//    @ManyToOne
-//    @JoinColumn(name = "tuteur_id", nullable = false)
-//    private TuteurEnseignant tuteurEnseignant;
-
-    @ManyToOne
-    @JoinColumn(name = "maitre_id")
-    private MaitreApprentissage maitreApprentissage;
-
-    // Getters & Setters
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public LocalDate getDateVisite() {
-        return dateVisite;
-    }
-
-    public void setDateVisite(LocalDate dateVisite) {
-        this.dateVisite = dateVisite;
-    }
-
-    public FormatVisite getFormat() {
-        return format;
-    }
-
-    public void setFormat(FormatVisite format) {
-        this.format = format;
-    }
-
-    public String getCommentaire() {
-        return commentaire;
-    }
-
-    public void setCommentaire(String commentaire) {
-        this.commentaire = commentaire;
-    }
-
-    public Apprenti getApprenti() {
-        return apprenti;
-    }
-
-    public void setApprenti(Apprenti apprenti) {
-        this.apprenti = apprenti;
-    }
-
-//    public TuteurEnseignant getTuteurEnseignant() {
-//        return tuteurEnseignant;
-//    }
-//
-//    public void setTuteurEnseignant(TuteurEnseignant tuteurEnseignant) {
-//        this.tuteurEnseignant = tuteurEnseignant;
-//    }
-
-    public MaitreApprentissage getMaitreApprentissage() {
-        return maitreApprentissage;
-    }
-
-    public void setMaitreApprentissage(MaitreApprentissage maitreApprentissage) {
-        this.maitreApprentissage = maitreApprentissage;
+    public enum FormatVisite {
+        visio, presentiel
     }
 }

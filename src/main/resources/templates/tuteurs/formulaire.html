@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un Tuteur Enseignant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0"><i class="fas fa-user-plus me-2"></i>Ajouter un Tuteur Enseignant</h4>
+            <a th:href="@{/tuteurs}" class="btn btn-outline-light btn-sm">← Retour à la liste</a>
+        </div>
+
+        <div class="card-body">
+            <form th:action="@{/tuteurs/ajouter}" th:object="${tuteur}" method="post" class="needs-validation">
+
+                <!-- Bloc infos personnelles -->
+                <fieldset class="border rounded-3 p-3 mb-4">
+                    <legend class="float-none w-auto px-2 fs-5 text-primary">Informations personnelles</legend>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" class="form-control" th:field="*{personne.prenom}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Nom</label>
+                            <input type="text" class="form-control" th:field="*{personne.nom}" required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" th:field="*{personne.adresseElectronique}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Téléphone</label>
+                            <input type="text" class="form-control" th:field="*{personne.telephone}">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Bloc compte -->
+                <fieldset class="border rounded-3 p-3">
+                    <legend class="float-none w-auto px-2 fs-5 text-primary">Compte Tuteur</legend>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Mot de passe</label>
+                            <input type="password" class="form-control" th:field="*{password}" required>
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center mt-3 mt-md-0">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" th:field="*{enabled}" checked>
+                                <label class="form-check-label">Compte actif</label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="fas fa-save me-2"></i>Créer le tuteur
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+</body>
+</html>
