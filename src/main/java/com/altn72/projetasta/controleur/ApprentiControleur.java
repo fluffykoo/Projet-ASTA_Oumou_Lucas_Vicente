@@ -6,6 +6,7 @@ import com.altn72.projetasta.modele.Entreprise;
 import com.altn72.projetasta.service.EntrepriseService;
 import com.altn72.projetasta.service.PersonneService;
 import com.altn72.projetasta.service.ApprentiService;
+import com.altn72.projetasta.service.AnneeAcademiqueService;
 import com.altn72.projetasta.modele.*;
 import com.altn72.projetasta.repository.EntrepriseRepository;
 import com.altn72.projetasta.repository.PersonneRepository;
@@ -28,29 +29,25 @@ public class ApprentiControleur {
     private final EntrepriseService entrepriseService;
     private final VisiteService visiteService;
     private final EvaluationRapportService evaluationRapportService;
+    private final AnneeAcademiqueService anneeAcademiqueService;
+
+
+    @Autowired
+    private RapportService rapportService;
 
     public ApprentiControleur(ApprentiService apprentiService,
                               PersonneService personneService,
                               EntrepriseService entrepriseService,
                               VisiteService visiteService,
-                              EvaluationRapportService evaluationRapportService) {
+                              EvaluationRapportService evaluationRapportService,
+                              AnneeAcademiqueService anneeAcademiqueService) {
         this.apprentiService = apprentiService;
         this.personneService = personneService;
         this.entrepriseService = entrepriseService;
         this.visiteService = visiteService;
         this.evaluationRapportService = evaluationRapportService;
+        this.anneeAcademiqueService = anneeAcademiqueService;
     }
-
-    @Autowired
-    private RapportService rapportService;
-
-//    // Liste de tous les apprentis
-//    @GetMapping
-//    public String afficherTousLesApprentis(Model model) {
-//        model.addAttribute("lesApprentis", apprentiService.getTousLesApprentis());
-//        return "listeApprentis";
-//    }
-
 
     // Détails d’un apprenti
     @GetMapping("/{id}")
@@ -95,7 +92,9 @@ public class ApprentiControleur {
 
             // Associer la personne et sauvegarder l’apprenti
             apprenti.setPersonne(p);
+            apprenti.setAnneeAcademique(anneeAcademiqueService.getAnneeEnCours());
             apprentiService.ajouterApprenti(apprenti);
+
 
             redirectAttributes.addFlashAttribute("successMessage",
                     "Apprenti ajouté avec succès !");
@@ -228,4 +227,5 @@ public class ApprentiControleur {
         // Recharge la page de l'apprenti
         return "redirect:/apprentis/" + id;
     }
+
 }
