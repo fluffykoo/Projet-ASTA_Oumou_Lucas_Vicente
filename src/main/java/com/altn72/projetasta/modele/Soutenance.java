@@ -20,19 +20,19 @@ public class Soutenance {
     private Integer id;
 
     // Une soutenance est toujours liée à un tuteur enseignant
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "Id_personne_tuteur_enseignant", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private TuteurEnseignant tuteurEnseignant;
 
     //  Une soutenance est toujours liée à un maître d’apprentissage
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "Id_personne_maitre_apprentissage", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private MaitreApprentissage maitreApprentissage;
 
     // Une soutenance est toujours liée à un apprenti
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "Id_personne_apprenti", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Apprenti apprenti;

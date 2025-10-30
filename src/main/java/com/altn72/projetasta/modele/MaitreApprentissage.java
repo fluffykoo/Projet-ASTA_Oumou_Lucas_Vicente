@@ -18,7 +18,7 @@ public class MaitreApprentissage {
     @Column(name = "Id_personne", nullable = false)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId // partage la même clé primaire que Personne
     @JoinColumn(name = "Id_personne", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

@@ -2,6 +2,7 @@ package com.altn72.projetasta.controleur;
 
 import com.altn72.projetasta.modele.Apprenti;
 import com.altn72.projetasta.service.ApprentiService;
+import jakarta.persistence.NamedNativeQuery;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,15 +27,7 @@ public class DashboardControleur {
             @RequestParam(required = false) String anneeAcademique,
             Model model) {
 
-        // Récupérer tous les apprentis (à adapter avec votre service)
-        List<Apprenti> apprentis = apprentiService.getTousLesApprentis();
-
-        // Filtrer selon les critères de recherche (à implémenter dans le service)
-        if (nom != null && !nom.isEmpty()) {
-            apprentis = apprentis.stream()
-                    .filter(a -> a.getPersonne().getNom().toLowerCase().contains(nom.toLowerCase()))
-                    .toList();
-        }
+        List<Apprenti> apprentis = apprentiService.searchApprentis(nom, entreprise, motCle, anneeAcademique);
 
         model.addAttribute("apprentis", apprentis);
         model.addAttribute("anneeEnCours", "2025-26");

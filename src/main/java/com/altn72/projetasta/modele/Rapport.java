@@ -17,7 +17,7 @@ public class Rapport {
     @Column(name = "Id_rapport")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "Id_apprenti", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)//si l'apprenti est supprimé, ses rapports le sont aussi
     private Apprenti apprenti;
