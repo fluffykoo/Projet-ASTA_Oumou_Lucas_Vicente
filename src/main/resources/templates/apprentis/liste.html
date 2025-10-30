@@ -27,10 +27,6 @@
                 <a th:href="@{/apprentis/preparerAjout}" class="btn btn-success me-2">
                     <i class="fas fa-plus me-1"></i>Ajouter un apprenti
                 </a>
-                <a th:href="@{/admin/nouvelle-annee}" class="btn btn-outline-primary"
-                   onclick="return confirm('Créer une nouvelle année académique ?')">
-                    <i class="fas fa-calendar-plus me-1"></i>Nouvelle année
-                </a>
             </div>
         </div>
 
@@ -86,7 +82,7 @@
                     <i class="fas fa-users me-2"></i>
                     Apprentis suivis - Année <span th:text="${anneeEnCours}">2025-26</span>
                 </h5>
-                <span class="badge bg-primary" th:text="${apprentis.size()} + ' apprenti(s)'"></span>
+                <span class="badge bg-primary" th:text="${totalApprentis} + ' apprenti(s)'"></span>
             </div>
             <div class="card-body">
                 <div th:if="${#lists.isEmpty(apprentis)}" class="text-center py-4">

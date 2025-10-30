@@ -75,7 +75,7 @@ public class ApprentiService {
         BeanUtils.copyProperties(apprentiModifie, apprentiExistant,
                 "id", "personne", "motsClefs", "soutenances", "rapports", "entreprise", "visites");
 
-        // ✅ On sauvegarde l'entité existante, PAS la modifiée
+        //  On sauvegarde l'entité existante, PAS la modifiée
         apprentiRepository.save(apprentiExistant);
     }
 
