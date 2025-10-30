@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,8 +28,8 @@ public class Apprenti {
     @Column(name = "programme", length = 45)
     private String programme;
 
-    @Column(name = "annee_academique", length = 45)
-    private String anneeAcademique;
+//    @Column(name = "annee_academique", length = 45)
+//    private String anneeAcademique;
 
     @Column(name = "majeure", length = 45)
     private String majeure;
@@ -61,4 +62,20 @@ public class Apprenti {
             inverseJoinColumns = @JoinColumn(name = "Nom_mot_clef")
     )
     private List<MotsClef> motsClefs;
+
+    //relation apprenti visite
+    @OneToMany(mappedBy = "apprenti", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Visite> visites = new ArrayList<>();
+
+    //relation avec son tuteur enseignant
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Id_tuteur_enseignant")
+    private TuteurEnseignant tuteurEnseignant;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "annee_id")
+    private AnneeAcademique anneeAcademique;
+
+    @Column(nullable = false)
+    private boolean archive = false;
 }

@@ -77,9 +77,10 @@ public class TuteurDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        TuteurEnseignant tuteur = tuteurRepo.findByIdentifiant(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Aucun tuteur trouvé pour : " + username));
+    public UserDetails loadUserByUsername(String identifiant) throws UsernameNotFoundException {
+        TuteurEnseignant tuteur = tuteurRepo.findByIdentifiantWithPersonne(identifiant)
+                .orElseThrow(() -> new UsernameNotFoundException("Tuteur non trouvé : " + identifiant));
+
         return new TuteurDetails(tuteur);
     }
 }

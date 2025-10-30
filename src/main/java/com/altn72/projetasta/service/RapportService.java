@@ -32,6 +32,11 @@ public class RapportService {
         );
     }
 
+    //  Récupérer les rapports d’un apprenti sans évaluation
+    public List<Rapport> getRapportsNonEvaluesPourApprenti(Integer idApprenti) {
+        return rapportRepository.findRapportsNonEvalues(idApprenti);
+    }
+
     // Supprimer un rapport
     @Transactional
     public void supprimerRapport(Integer idRapport) {
@@ -58,5 +63,14 @@ public class RapportService {
 
         BeanUtils.copyProperties(rapportModifie, rapportToModify, "id");
         rapportRepository.save(rapportToModify);
+    }
+    // Compter le total de rapports
+    public long countTotal() {
+        return rapportRepository.count();
+    }
+
+    // Compter les rapports non évalués
+    public long countNonEvalues() {
+        return rapportRepository.countRapportsNonEvalues();
     }
 }

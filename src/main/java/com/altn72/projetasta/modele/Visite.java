@@ -23,6 +23,11 @@ public class Visite {
     private TuteurEnseignant tuteurEnseignant;
 
     @ManyToOne(fetch = FetchType.LAZY)//pour éviter de surcharger la memoire et charger toutes les infos d'un coup
+    @JoinColumn(name = "id_apprenti", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Apprenti apprenti;
+
+    @ManyToOne(fetch = FetchType.LAZY)//pour éviter de surcharger la memoire et charger toutes les infos d'un coup
     @JoinColumn(name = "id_entreprise", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Entreprise entreprise;
@@ -41,26 +46,3 @@ public class Visite {
         visio, presentiel
     }
 }
-//package com.altn72.projetasta.modele;
-//
-//import jakarta.persistence.*;
-//import lombok.Getter;
-//import lombok.Setter;
-//
-//@Getter
-//@Setter
-//@Entity
-//@Table(name = "visite", schema = "ASTA")
-//public class Visite {
-//    @EmbeddedId
-//    private VisiteId id;
-//
-//    @Lob
-//    @Column(name = "format_visite")
-//    private String formatVisite;
-//
-//    @Lob
-//    @Column(name = "commentaire")
-//    private String commentaire;
-//
-//}

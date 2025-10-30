@@ -64,10 +64,12 @@ public class VisiteControleur {
         return "detailsVisite";
     }
 
-    // Modifier une visite
+    // Modifier une visite existante
     @PutMapping("/modifier/{id}")
     public String modifierVisite(@PathVariable("id") Integer id, @ModelAttribute Visite visiteModifiee) {
         visiteService.modifierVisite(id, visiteModifiee);
         return "redirect:/visites";
     }
+
+
 }
