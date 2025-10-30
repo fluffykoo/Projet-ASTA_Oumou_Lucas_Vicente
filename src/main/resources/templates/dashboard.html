@@ -101,6 +101,22 @@
                     </tbody>
                 </table>
             </div>
+            <div class="card border-primary mb-4 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-primary">
+                        <i class="fas fa-calendar-alt me-2"></i>Gestion de l’année académique
+                    </h5>
+                    <p class="card-text text-muted">
+                        Archiver les M2 actuels et promouvoir automatiquement les autres apprentis.
+                    </p>
+                    <form th:action="@{/archiver-annee}" method="post"
+                          onsubmit="return confirm('Confirmer le passage à la nouvelle année académique ?');">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sync-alt me-1"></i> Passer à la nouvelle année
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
 
     </div> <!-- fin du fragment content -->

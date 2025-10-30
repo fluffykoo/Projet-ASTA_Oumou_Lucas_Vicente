@@ -28,8 +28,8 @@ public class Apprenti {
     @Column(name = "programme", length = 45)
     private String programme;
 
-    @Column(name = "annee_academique", length = 45)
-    private String anneeAcademique;
+//    @Column(name = "annee_academique", length = 45)
+//    private String anneeAcademique;
 
     @Column(name = "majeure", length = 45)
     private String majeure;
@@ -71,4 +71,11 @@ public class Apprenti {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Id_tuteur_enseignant")
     private TuteurEnseignant tuteurEnseignant;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "annee_id")
+    private AnneeAcademique anneeAcademique;
+
+    @Column(nullable = false)
+    private boolean archive = false;
 }

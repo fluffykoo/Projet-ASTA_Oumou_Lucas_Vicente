@@ -141,25 +141,25 @@ public class ApprentiControleur {
             RedirectAttributes redirectAttributes) {
 
         try {
-            // 1️⃣ Vérifier que l'apprenti existe
+            // Vérifier que l'apprenti existe
             Apprenti apprenti = apprentiService.getUnApprenti(id)
                     .orElseThrow(() -> new IllegalStateException("Apprenti introuvable"));
 
-            // 2️⃣ Vérifier que le rapport a été choisi dans le formulaire
+            // Vérifier que le rapport a été choisi dans le formulaire
             if (evaluation.getRapport() == null || evaluation.getRapport().getId() == null) {
                 throw new IllegalStateException("Aucun rapport sélectionné !");
             }
 
-            // 3️⃣ Charger le rapport complet depuis la BDD
+            //  Charger le rapport complet depuis la BDD
             Rapport rapport = rapportService.getUnRapport(evaluation.getRapport().getId())
                     .orElseThrow(() -> new IllegalStateException("Rapport introuvable !"));
 
-            // 4️⃣ Associer l'apprenti et le rapport
+            // Associer l'apprenti et le rapport
             evaluation.setId(null); // force un INSERT (sinon Hibernate fait un merge)
             evaluation.setApprenti(apprenti);
             evaluation.setRapport(rapport);
 
-            // 5️⃣ Récupérer le tuteur enseignant à partir de la dernière visite, s’il existe
+            //Récupérer le tuteur enseignant à partir de la dernière visite, s’il existe
             if (!apprenti.getVisites().isEmpty()) {
                 evaluation.setTuteurEnseignant(
                         apprenti.getVisites().get(0).getTuteurEnseignant()
@@ -168,7 +168,7 @@ public class ApprentiControleur {
                 throw new IllegalStateException("Aucune visite enregistrée pour déterminer le tuteur enseignant !");
             }
 
-            // 6️⃣ Enregistrer l’évaluation
+            //Enregistrer l’évaluation
             evaluationRapportService.ajouterEvaluation(evaluation);
             redirectAttributes.addFlashAttribute("successMessage", "Évaluation ajoutée avec succès !");
         } catch (Exception e) {
