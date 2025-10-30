@@ -2,14 +2,11 @@ package com.altn72.projetasta.controleur;
 
 import com.altn72.projetasta.modele.Apprenti;
 import com.altn72.projetasta.modele.Personne;
-import com.altn72.projetasta.modele.Entreprise;
 import com.altn72.projetasta.service.EntrepriseService;
 import com.altn72.projetasta.service.PersonneService;
 import com.altn72.projetasta.service.ApprentiService;
 import com.altn72.projetasta.service.AnneeAcademiqueService;
 import com.altn72.projetasta.modele.*;
-import com.altn72.projetasta.repository.EntrepriseRepository;
-import com.altn72.projetasta.repository.PersonneRepository;
 import com.altn72.projetasta.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
