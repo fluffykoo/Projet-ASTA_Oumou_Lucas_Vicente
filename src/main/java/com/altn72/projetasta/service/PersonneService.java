@@ -32,6 +32,11 @@ public class PersonneService {
         );
     }
 
+    public String RecupererNomPersonne(Integer idPersonne){
+        Optional<Personne> PersonneARecuperer = getUnePersonne(idPersonne);
+        return PersonneARecuperer.get().getNom();
+    }
+
     // Supprimer une personne
     @Transactional
     public void supprimerPersonne(Integer idPersonne) {

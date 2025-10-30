@@ -1,5 +1,11 @@
 package com.altn72.projetasta.controleur;
 
+import com.altn72.projetasta.modele.Apprenti;
+import com.altn72.projetasta.modele.Personne;
+import com.altn72.projetasta.modele.Entreprise;
+import com.altn72.projetasta.service.EntrepriseService;
+import com.altn72.projetasta.service.PersonneService;
+import com.altn72.projetasta.service.ApprentiService;
 import com.altn72.projetasta.modele.*;
 import com.altn72.projetasta.repository.EntrepriseRepository;
 import com.altn72.projetasta.repository.PersonneRepository;
@@ -17,23 +23,23 @@ import java.util.Optional;
 @RequestMapping("/apprentis")
 public class ApprentiControleur {
 
-    @Autowired
-    private ApprentiService apprentiService;
+    private final ApprentiService apprentiService;
+    private final PersonneService personneService;
+    private final EntrepriseService entrepriseService;
+    private final VisiteService visiteService;
+    private final EvaluationRapportService evaluationRapportService;
 
-    @Autowired
-    private PersonneRepository personneRepository;
-
-    @Autowired
-    private EntrepriseRepository entrepriseRepository;
-
-    @Autowired
-    private VisiteService visiteService;
-
-    @Autowired
-    private EvaluationRapportService evaluationRapportService;
-
-    @Autowired
-    private SoutenanceService soutenanceService;
+    public ApprentiControleur(ApprentiService apprentiService,
+                              PersonneService personneService,
+                              EntrepriseService entrepriseService,
+                              VisiteService visiteService,
+                              EvaluationRapportService evaluationRapportService) {
+        this.apprentiService = apprentiService;
+        this.personneService = personneService;
+        this.entrepriseService = entrepriseService;
+        this.visiteService = visiteService;
+        this.evaluationRapportService = evaluationRapportService;
+    }
 
     @Autowired
     private RapportService rapportService;
@@ -45,14 +51,6 @@ public class ApprentiControleur {
 //        return "listeApprentis";
 //    }
 
-    // Formulaire d’ajout d’un nouvel apprenti
-    @GetMapping("/preparerAjout")
-    public String preparerAjout(Model model) {
-        model.addAttribute("nouvelApprenti", new Apprenti());
-        model.addAttribute("entreprises", entrepriseRepository.findAll());
-        model.addAttribute("anneeEnCours", "2025-2026");
-        return "ajouter-apprenti";
-    }
 
     // Détails d’un apprenti
     @GetMapping("/{id}")
@@ -62,14 +60,13 @@ public class ApprentiControleur {
             redirectAttributes.addFlashAttribute("errorMessage", "Apprenti introuvable !");
             return "redirect:/dashboard";
         }
-
         Apprenti apprenti = apprentiOpt.get();
         model.addAttribute("apprenti", apprenti);
         model.addAttribute("visites", apprenti.getVisites());
         model.addAttribute("nouvelleVisite", new Visite());
         model.addAttribute("newEvaluation", new EvaluationRapport());
         model.addAttribute("newSoutenance", new Soutenance());
-        model.addAttribute("entreprises", entrepriseRepository.findAll());
+        model.addAttribute("entreprises", entrepriseService.getEntreprises());
 
         // Charger les rapports non évalués
         List<Rapport> rapportsNonNotes = rapportService.getRapportsNonEvaluesPourApprenti(id);
@@ -77,39 +74,92 @@ public class ApprentiControleur {
 
         return "apprenti-details";
     }
-     //Ajouter un apprenti
+
+    // Préparer le formulaire d’ajout
+    @GetMapping("/preparerAjout")
+    public String preparerAjout(Model model) {
+        model.addAttribute("nouvelApprenti", new Apprenti());
+        model.addAttribute("entreprises", entrepriseService.getEntreprises());
+        model.addAttribute("anneeEnCours", "2025-2026");
+        return "ajouter-apprenti";
+    }
+
+    // Ajouter un nouvel apprenti
     @PostMapping("/ajouter")
     public String ajouterApprenti(@ModelAttribute("nouvelApprenti") Apprenti apprenti,
                                   RedirectAttributes redirectAttributes) {
         try {
+            // Créer la personne associée avant de sauvegarder l’apprenti
             Personne p = apprenti.getPersonne();
-            personneRepository.save(p);
+            personneService.ajouterPersonne(p);
+
+            // Associer la personne et sauvegarder l’apprenti
             apprenti.setPersonne(p);
             apprentiService.ajouterApprenti(apprenti);
-            redirectAttributes.addFlashAttribute("successMessage", "Apprenti ajouté avec succès !");
+
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Apprenti ajouté avec succès !");
             return "redirect:/dashboard";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Erreur : " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Erreur lors de l'ajout : " + e.getMessage());
             return "redirect:/apprentis/preparerAjout";
         }
     }
 
-    // Modifier un apprenti (PUT)
-    @PutMapping("/{id}")
-    public String modifierApprenti(@PathVariable Integer id,
+    // Préparer la modification
+    @GetMapping("/preparerModif/{id}")
+    public String preparerModif(@PathVariable Integer id, Model model) {
+        Optional<Apprenti> apprentiOpt = apprentiService.getUnApprenti(id);
+        if (apprentiOpt.isPresent()) {
+            model.addAttribute("apprenti", apprentiOpt.get());
+            model.addAttribute("entreprises", entrepriseService.getEntreprises());
+            return "apprenti-details";
+        }
+        return "redirect:/dashboard";
+    }
+
+    // Modifier un apprenti
+    @PutMapping("/modifier/{id}")
+    public String modifierApprentiSeul(@PathVariable Integer id,
                                    @ModelAttribute Apprenti apprentiModifie,
                                    RedirectAttributes redirectAttributes) {
         try {
             apprentiService.modifierApprenti(id, apprentiModifie);
             redirectAttributes.addFlashAttribute("successMessage", "Apprenti modifié avec succès !");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Erreur de modification : " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "Échec de la modification : " + e.getMessage());
         }
         return "redirect:/apprentis/" + id;
     }
 
-    // Supprimer un apprenti
-    @DeleteMapping("/{id}")
+    @PostMapping("/modifierTotalApprenti/{id}")
+    public String modifierTotalApprenti(
+            @PathVariable Integer id,
+            @ModelAttribute("apprenti") Apprenti apprentiModifie,
+            RedirectAttributes redirectAttributes) {
+        try {
+            // Appelle les services avec les sous-objets déjà présents dans apprenti
+            entrepriseService.modifierEntreprise(
+                    apprentiModifie.getEntreprise().getId(),
+                    apprentiModifie.getEntreprise()
+            );
+            personneService.modifierPersonne(
+                    apprentiModifie.getPersonne().getId(),
+                    apprentiModifie.getPersonne()
+            );
+            apprentiService.modifierApprenti(id, apprentiModifie);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Modification réussie !");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Échec de la modification : " + e.getMessage());
+        }
+        return "redirect:/apprentis/" + id;
+    }
+
+
+    //Supprimer un apprenti
+    @GetMapping("/supprimer/{id}")
     public String supprimerApprenti(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {
             apprentiService.supprimerApprenti(id);

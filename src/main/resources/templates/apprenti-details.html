@@ -23,7 +23,7 @@
         </a>
         <div class="navbar-nav ms-auto">
             <span class="navbar-text text-white me-3" th:if="${#authentication}">
-                Bonjour <span th:text="${#authentication.principal.prenom}">Tuteur</span> |
+                Bonjour <span th:text="${#authentication.name}">Tuteur</span> |
                 <a href="#" class="text-white text-decoration-none" onclick="document.getElementById('logoutForm').submit();">
                     Déconnectez-vous
                 </a>
@@ -62,8 +62,8 @@
         </button>
     </div>
 
-    <!-- Formulaire Apprenti -->
-    <form th:action="@{/apprentis/modifier/{id}(id=${apprenti.personne.id})}" th:object="${apprenti}" method="post">
+    <!-- Formulaire -->
+    <form th:action="@{/apprentis/modifierTotalApprenti/{id}(id=${apprenti.personne.id})}" th:object="${apprenti}" method="post">
         <div class="row">
 
             <!-- Informations Apprenti -->
@@ -86,23 +86,26 @@
                                 <label class="form-label">Majeure</label>
                                 <input type="text" class="form-control" th:field="*{majeure}" readonly>
                             </div>
+                            <!-- Personne -->
+                            <div th:object="${apprenti.personne}" class="row g-3">
+                                <div class="col-md-6">
+                                    <input type="hidden" th:field="*{id}" />
+                                    <label class="form-label">Nom</label>
+                                    <input type="text" class="form-control" th:field="*{nom}" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Prénom</label>
+                                    <input type="text" class="form-control" th:field="*{prenom}" readonly>
+                                </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label">Nom</label>
-                                <input type="text" class="form-control" th:field="*{personne.nom}" readonly>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Prénom</label>
-                                <input type="text" class="form-control" th:field="*{personne.prenom}" readonly>
-                            </div>
-
-                            <div class="col-12">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" th:field="*{personne.adresseElectronique}" readonly>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">Téléphone</label>
-                                <input type="tel" class="form-control" th:field="*{personne.telephone}" readonly>
+                                <div class="col-12">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" th:field="*{adresseElectronique}" readonly>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Téléphone</label>
+                                    <input type="tel" class="form-control" th:field="*{telephone}" readonly>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -118,6 +121,7 @@
                     <div class="card-body">
                         <div th:object="${apprenti.entreprise}" class="row g-3">
                             <div class="col-12">
+                                <input type="hidden" th:field="*{id}" />
                                 <label class="form-label">Raison sociale</label>
                                 <input type="text" class="form-control" th:field="*{raisonSociale}" readonly>
                             </div>
