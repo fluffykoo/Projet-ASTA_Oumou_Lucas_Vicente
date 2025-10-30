@@ -40,23 +40,7 @@ public class DashboardControleur {
         this.rapportService = rapportService;
         this.tuteurService = tuteurService;
     }
-/*
-    @GetMapping("/dashboard")
-    public String dashboard(
-            @RequestParam(required = false) String nom,
-            @RequestParam(required = false) String entreprise,
-            @RequestParam(required = false) String motCle,
-            @RequestParam(required = false) String anneeAcademique,
-            Model model) {
 
-        List<Apprenti> apprentis = apprentiService.searchApprentis(nom, entreprise, motCle, anneeAcademique);
-
-        model.addAttribute("apprentis", apprentis);
-        model.addAttribute("anneeEnCours", "2025-26");
-        model.addAttribute("anneesAcademiques", List.of("2023-24", "2024-25", "2025-26"));
-
-        return "dashboard";
-    }*/
 @GetMapping("/dashboard")
 public String afficherDashboard(Model model, Authentication authentication) {
 

@@ -70,8 +70,13 @@ public class ApprentiService {
     public void modifierApprenti(Integer idApprenti, Apprenti apprentiModifie) {
         Apprenti apprentiExistant = apprentiRepository.findById(idApprenti)
                 .orElseThrow(() -> new IllegalStateException("L'apprenti dont l'id est " + idApprenti + " n'existe pas"));
-        //  Mise à jour des champs de Apprenti
-        BeanUtils.copyProperties(apprentiModifie, apprentiExistant, "id", "personne","motsClefs","soutenances","rapports","entreprise");
+
+        // Copier les propriétés sauf les collections gérées par Hibernate
+        BeanUtils.copyProperties(apprentiModifie, apprentiExistant,
+                "id", "personne", "motsClefs", "soutenances", "rapports", "entreprise", "visites");
+
+        // ✅ On sauvegarde l'entité existante, PAS la modifiée
+        apprentiRepository.save(apprentiExistant);
     }
 
     @PersistenceContext

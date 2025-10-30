@@ -26,13 +26,19 @@ public class ApprentiControleur {
     private final ApprentiService apprentiService;
     private final PersonneService personneService;
     private final EntrepriseService entrepriseService;
+    private final VisiteService visiteService;
+    private final EvaluationRapportService evaluationRapportService;
 
     public ApprentiControleur(ApprentiService apprentiService,
                               PersonneService personneService,
-                              EntrepriseService entrepriseService) {
+                              EntrepriseService entrepriseService,
+                              VisiteService visiteService,
+                              EvaluationRapportService evaluationRapportService) {
         this.apprentiService = apprentiService;
         this.personneService = personneService;
         this.entrepriseService = entrepriseService;
+        this.visiteService = visiteService;
+        this.evaluationRapportService = evaluationRapportService;
     }
 
     @Autowired
@@ -60,7 +66,7 @@ public class ApprentiControleur {
         model.addAttribute("nouvelleVisite", new Visite());
         model.addAttribute("newEvaluation", new EvaluationRapport());
         model.addAttribute("newSoutenance", new Soutenance());
-        model.addAttribute("entreprises", entrepriseRepository.findAll());
+        model.addAttribute("entreprises", entrepriseService.getEntreprises());
 
         // Charger les rapports non évalués
         List<Rapport> rapportsNonNotes = rapportService.getRapportsNonEvaluesPourApprenti(id);
@@ -127,7 +133,7 @@ public class ApprentiControleur {
         return "redirect:/apprentis/" + id;
     }
 
-    @PutMapping("/modifierTotalApprenti/{id}")
+    @PostMapping("/modifierTotalApprenti/{id}")
     public String modifierTotalApprenti(
             @PathVariable Integer id,
             @ModelAttribute("apprenti") Apprenti apprentiModifie,
