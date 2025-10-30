@@ -1,3 +1,91 @@
+<details open>
+<summary><strong>README – Installation et Configuration</strong></summary>
+
+# ASTA – Application de Suivi des Tutorats d’Apprentis
+
+## 1. Clonage du projet
+
+```bash
+git clone -b main https://github.com/fluffykoo/Projet-ASTA_Oumou_Lucas_Vicente.git
+cd Projet-ASTA_Oumou_Lucas_Vicente
+```
+
+## 2. Configuration de l’environnement
+
+Créer un fichier `.env` à la racine du projet :
+
+```bash
+touch .env
+```
+
+Y copier le contenu suivant :
+
+```env
+DB_PASSWORD=AVNS_P2mB9863Tkc2kZ-idk1
+```
+
+Assurez-vous que votre serveur MariaDB est en marche avant de lancer l’application.
+
+## 3. Identifiants de connexion
+
+Un compte tuteur enseignant par défaut est préconfiguré :
+
+| Identifiant | Mot de passe (en clair) | Détails techniques |
+|--------------|--------------------------|--------------------|
+| `jaugustin`  | `tuteur123`              | Le mot de passe est hashé en base (BCrypt) côté back-end. |
+
+## 4. Lancement du projet
+
+### Avec IntelliJ IDEA :
+1. Ouvrir le projet (`File → Open → Projet-ASTA_Oumou_Lucas_Vicente`)
+2. Vérifier que le JDK configuré est Java 17
+3. Lancer la classe principale :
+
+   ```
+   src/main/java/com/altn72/projetasta/ProjetAstaApplication.java
+   ```
+
+### Ou en ligne de commande :
+
+```bash
+./mvnw spring-boot:run
+```
+
+Puis accéder à l’application :
+[http://localhost:8080/login](http://localhost:8080/login)
+
+## 5. Connexion à l’interface
+
+- Identifiant : `jaugustin`
+- Mot de passe : `tuteur123`
+
+Une fois connecté, le tuteur est redirigé vers le tableau de bord ASTA :
+- Liste des apprentis
+- Détails, visites, évaluations et rapports
+- Ajout ou modification d’un apprenti
+
+## 6. Stack technique
+
+| Composant | Technologie |
+|------------|-------------|
+| Backend | Spring Boot 3 + JPA/Hibernate |
+| Frontend | Thymeleaf + Bootstrap 5 |
+| Base de données | MariaDB |
+| ORM | Hibernate |
+| Sécurité | Spring Security (BCrypt + form login) |
+
+## 7. Auteurs
+
+Projet réalisé par :  
+Oumou Camara, Lucas Baury, Vicente Seixas
+
+Dernière mise à jour : Octobre 2025
+
+</details>
+<details>
+
+<summary><strong>Rapport Technique – Projet ASTA</strong></summary>
+
 # Rapport - Projet ASTA - Oumou CAMARA / Vicente SEIXAS / Lucas BAURY
 
 Ajouter le **.env** à la racine du projet ou rentrer en dur le mot de passe dans application.properties pour pouvoir acceder à la base de donnée distante.
@@ -111,14 +199,14 @@ Nous avons choisi **Spring Security avec un DaoAuthenticationProvider** :
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(auth -> auth
-            .requestMatchers("/login", "/error", "/css/**").permitAll()
-            .anyRequest().authenticated()
-    )
-    .formLogin(form -> form
-            .loginPage("/login")
-            .defaultSuccessUrl("/dashboard", true)
-    )
-    .logout(logout -> logout.logoutSuccessUrl("/login?logout"));
+                    .requestMatchers("/login", "/error", "/css/**").permitAll()
+                    .anyRequest().authenticated()
+            )
+            .formLogin(form -> form
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/dashboard", true)
+            )
+            .logout(logout -> logout.logoutSuccessUrl("/login?logout"));
     return http.build();
 }
 ```
@@ -215,3 +303,4 @@ Ce socle robuste permet d’envisager potentiellement :
 - l’ajout de fonctionnalités pédagogiques (suivi des notes, notifications, statistiques),
 - et une exploitation réelle dans un environnement académique.
 
+</details>
