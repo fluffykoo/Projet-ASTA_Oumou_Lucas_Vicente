@@ -6,7 +6,6 @@
 
 package com.altn72.projetasta.repository;
 import com.altn72.projetasta.modele.EvaluationRapport;
-import com.altn72.projetasta.modele.tmp.EvaluationRapportId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EvaluationRapportRepository extends JpaRepository<EvaluationRapport, Integer> {

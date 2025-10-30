@@ -38,7 +38,7 @@ public class EvaluationRapportDTO {
                 : "Non renseigné";
     }
 
-    // --- Méthodes utilitaires pour éviter les NullPointer/erreurs de compilation ---
+    // Méthodes utilitaires pour éviter les NullPointer/erreurs de compilation
     private String tryGetCommentaire(EvaluationRapport e) {
         try {
             return (String) e.getClass().getMethod("getCommentaire").invoke(e);
