@@ -56,7 +56,7 @@ public String afficherDashboard(Model model, Authentication authentication) {
         return "dashboard";
     }
 
-    // 🔹 Apprentis actifs de l’année
+    // Apprentis actifs de l’année
     List<Apprenti> apprentis = apprentiService.getTousLesApprentis().stream()
             .filter(a -> a.getAnneeAcademique() != null
                     && a.getAnneeAcademique().equals(anneeActuelle)
@@ -64,7 +64,7 @@ public String afficherDashboard(Model model, Authentication authentication) {
             .toList();
     long totalApprentisActifs = apprentis.size();
 
-    // 🔹 Apprentis du tuteur connecté
+    // Apprentis du tuteur connecté
     List<Apprenti> apprentisTuteur = apprentiService.getApprentisParTuteur(identifiant).stream()
             .filter(a -> a.getAnneeAcademique() != null
                     && a.getAnneeAcademique().equals(anneeActuelle)
@@ -72,7 +72,7 @@ public String afficherDashboard(Model model, Authentication authentication) {
             .toList();
     long mesApprentis = apprentisTuteur.size();
 
-    // 🔹 Statistiques et alertes
+    //  Statistiques et alertes
     List<Visite> visites = visiteService.getVisites().stream()
             .filter(v -> v.getApprenti() != null && apprentis.contains(v.getApprenti()))
             .toList();
@@ -105,7 +105,7 @@ public String afficherDashboard(Model model, Authentication authentication) {
             .limit(5)
             .toList();
 
-    // 🔹 Injection modèle Thymeleaf
+    // Injection modèle Thymeleaf
     model.addAttribute("tuteurPrenom", tuteur.getPersonne().getPrenom());
     model.addAttribute("tuteurNom", tuteur.getPersonne().getNom());
     model.addAttribute("totalApprentis", totalApprentisActifs);
